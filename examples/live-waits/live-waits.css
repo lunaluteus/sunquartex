@@ -1,0 +1,5 @@
+/* Keep the wide two-panel plot within the article on small screens. */
+#fig-live-region img {
+  max-width: 100%;
+  height: auto;
+}

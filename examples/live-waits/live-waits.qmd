@@ -1,0 +1,230 @@
+---
+title: Two sharp limits for live waits
+subtitle: A structural argument, a picture, and a Lean checkpoint
+author:
+  name: Luna Luteus
+date: 2026-11-17
+lang: en
+bibliography: live-waits.bib
+resources:
+  - Capacity.lean
+  - CopyBound.lean
+  - LiveMaximum.lean
+abstract: |
+  With four physical copies per rank, a full-sided live Mahjong wait on $3n$
+  ranks exists exactly when $n < m < 3n$. We give an explicit construction for
+  every admissible meld count and explain why fewer than four physical copies
+  can never suffice. Both arguments have independently checked Lean proofs.
+number-sections: true
+toc-depth: 2
+format:
+  html:
+    embed-resources: true
+    css: live-waits.css
+  pdf:
+    keep-tex: true
+    custom-theorem:
+      numbered-alike: false
+  gfm: default
+execute:
+  echo: false
+  warning: false
+---
+
+## The question {#sec-question}
+
+Nine Gates is the wait `1112345678999`: drawing any of the nine ranks completes
+four melds and a pair. We use the general framework of @xue-zhong-2026, allowing
+$3n$ ranks, a meld count $m$, and a physical copy cap $q$ to vary independently.
+A meld is either three identical ranks or three consecutive ranks.
+
+Write $c_i$ for the multiplicity of paper rank $i$, numbered from $1$ to $3n$.
+A full-sided wait has $3m+1$ tiles and wins after every possible draw.
+It is **live** when every draw also respects the physical copy cap:
+
+$$
+c_i+1\le q\qquad(1\le i\le 3n).
+$$ {#eq-live-cap}
+
+The eight-family theorem classifies full-sided waits at $m=n+1$.
+Here we ask a coarser question: **which meld counts can occur at all?**
+We do not attempt to count or classify every hand at a given meld count.
+
+## The exact interval with four copies {#sec-interval}
+
+::: {#thm-live-interval}
+## Existence interval
+
+For natural numbers $n,m$, there is a live full-sided wait on $3n$ ranks
+with $m$ melds and physical copy cap four if and only if
+
+$$
+n<m<3n.
+$$
+:::
+
+For $n=1$, the only possible meld count is $m=2$.
+For ordinary nine-rank Mahjong ($n=3$), the possible counts are $4,5,6,7,8$.
+These are existence statements, not claims about how many waits there are.
+
+### Why these bounds are necessary
+
+The structural class-size bounds give $m>n$
+[@xue-zhong-2026, Proposition 5.7]. The other inequality is immediate from
+liveness: @eq-live-cap gives $c_i\le3$, hence
+
+$$
+3m+1=\sum_{i=1}^{3n}c_i\le9n,
+$$
+
+and therefore $m<3n$.
+More generally, any live full-sided wait satisfies $m<n(q-1)$.
+
+### Filling every gap
+
+Start with the generalized Nine Gates hand
+
+$$
+A_n=(3,\underbrace{1,\ldots,1}_{3n-2},3),
+$$
+
+which has $n+1$ melds. Adding any sequence preserves full-sidedness:
+a decomposition for each old winning draw can simply include the extra sequence.
+
+Suppose $n<m<3n$. Put
+
+$$
+\begin{aligned}
+k&=m-(n+1),\\
+a&=\min(k,n-1),\\
+b&=k-a.
+\end{aligned}
+$$
+
+Then $a+b=k$ and $0\le a,b\le n-1$.
+Add one layer of $a$ disjoint sequences covering the first $3a$ interior ranks,
+and another layer of $b$ disjoint sequences covering the first $3b$ interior ranks.
+Each interior multiplicity increases by at most two, and the boundary
+multiplicities stay at three. Thus the resulting hand is still live under
+cap four, and its meld count is exactly $n+1+a+b=m$.
+This proves @thm-live-interval.
+
+::: {#tbl-six-ranks}
+
++-------+-------+--------------------------+
+| $n$   | $m$   | A constructed live wait  |
++=======+=======+==========================+
+| $2$   | $3$   | $(3,1,1,1,1,3)$          |
++-------+-------+--------------------------+
+| $2$   | $4$   | $(3,2,2,2,1,3)$          |
++-------+-------+--------------------------+
+| $2$   | $5$   | $(3,3,3,3,1,3)$          |
++-------+-------+--------------------------+
+
+All admissible meld counts at order two, using the same two-layer construction.
+:::
+
+@tbl-six-ranks illustrates the construction. @fig-live-region shows its
+parameter range and an extremal nine-rank hand.
+
+```{python}
+#| label: fig-live-region
+#| fig-cap: "Left: the admissible integer pairs (n,m) under copy cap four. Right: an extremal nine-rank hand with eight melds. The dots plot the proved interval, not an enumeration of candidate hands."
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(1, 2, figsize=(9, 3.7), layout="constrained")
+fig.patch.set_facecolor("white")
+
+ax = axes[0]
+xs = np.linspace(0.8, 7.2, 100)
+ax.fill_between(xs, xs, 3 * xs, color="#407b9f", alpha=0.10)
+ax.plot(xs, xs, "--", color="#8c4a53", linewidth=1, label=r"$m=n$")
+ax.plot(xs, 3 * xs, "--", color="#4e7291", linewidth=1, label=r"$m=3n$")
+for n in range(1, 8):
+    counts = np.arange(n + 1, 3 * n)
+    ax.scatter(np.full(len(counts), n), counts, s=17, color="#285c79", zorder=3)
+ax.set(xlabel=r"order $n$", ylabel=r"meld count $m$", xlim=(0.6, 7.4), ylim=(0, 22))
+ax.set_xticks(range(1, 8))
+ax.legend(frameon=False, fontsize=8)
+ax.grid(alpha=0.12)
+ax.set_title(r"$n<m<3n$", fontsize=11)
+
+ax = axes[1]
+hand = np.array([3, 3, 3, 3, 3, 3, 3, 1, 3])
+colors = ["#7297a7"] * 9
+colors[7] = "#b76668"
+ax.bar(np.arange(1, 10), hand, color=colors, width=0.68)
+ax.axhline(3, color="#59636b", linestyle="--", linewidth=0.8)
+ax.set(xlabel="paper rank", ylabel="multiplicity before drawing", ylim=(0, 3.8))
+ax.set_xticks(range(1, 10))
+ax.set_yticks(range(4))
+ax.set_title(r"$n=3,\quad m=8$", fontsize=11)
+ax.spines[["top", "right"]].set_visible(False)
+plt.show()
+```
+
+::: {#cor-largest-live}
+## Largest live meld count
+
+At every positive order $n$, the largest live meld count under cap four is
+$3n-1$. It is attained by the hand with three copies of each rank except a
+single copy of the penultimate rank.
+:::
+
+## Why four physical copies are the minimum {#sec-minimum-cap}
+
+::: {#prp-three-copies}
+## A triple is unavoidable
+
+Every full-sided wait contains at least three copies of some rank,
+regardless of its order or meld count. Consequently every live full-sided wait
+requires $q\ge4$.
+:::
+
+Here is a short class-size argument. Group ranks by their residues modulo three,
+and let $C_R$ be the total multiplicity in residue class $R$.
+Every sequence contributes one tile to each class; a triplet contributes
+three tiles to just one class.
+
+The draw-pair congruence singles out a fixed class $S$: a draw in $S$ uses a pair
+in $S$, while a draw in either other class uses a pair in the remaining class
+[@xue-zhong-2026, Proposition 4.2 and Definition 4.3].
+
+::: {.proof}
+
+Suppose all original multiplicities are at most two. After drawing rank $i$
+and removing a pair, only rank $i$ can have multiplicity at least three.
+Thus every triplet in a winning decomposition must lie at the drawn rank.
+Any other class consists entirely of sequences and has no larger class size
+than the drawn class.
+
+First draw in $S$. Removing the pair reduces the net size of $S$ by one,
+so for either nonfixed class $T$ we obtain $C_T\le C_S-1$.
+Now draw in the other nonfixed class and remove a pair from $T$.
+The class $S$ has no triplets, giving $C_S\le C_T-2$.
+The two inequalities contradict each other.
+
+Therefore some rank has multiplicity at least three. A live draw at that rank
+requires at least four physical copies, as claimed in @prp-three-copies.
+:::
+
+The bound is attained: $A_n$ is live with four physical copies at every positive
+order. Thus the minimum copy cap is exactly four.
+
+## Lean sources {#sec-lean}
+
+The sources below were checked with Lean 4.35.0 against the structural library
+at [this pinned revision](https://github.com/lunaluteus/ninegates-lean4/tree/8e374e6fb141c0c6a8f0ac7689652c154739d146).
+Quarto renders the source; the Lean check is a separate command.
+
+{{< lean-include Capacity.lean >}}
+
+The complete proofs are available in [LiveMaximum.lean](LiveMaximum.lean)
+and [CopyBound.lean](CopyBound.lean). To check them, run `lake env lean` on each
+file from a checkout of the pinned library with its dependencies installed.
+These files develop consequences of the library; they are not part of its
+pending upstream pull request.
+
+## References {#sec-references}
