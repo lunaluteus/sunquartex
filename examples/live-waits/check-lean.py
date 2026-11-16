@@ -11,7 +11,7 @@ import tempfile
 
 SOURCES = ('Capacity.lean', 'LiveMaximum.lean', 'CopyBound.lean', 'CapacitySpectrum.lean',
            'OrderOneDuality.lean', 'OrderOneBoxes.lean', 'OrderOnePolynomial.lean',
-           'OrderOneStability.lean')
+           'OrderOneStability.lean', 'CopyCapStability.lean')
 AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     f'Mahjong.VirtualHand.LiveSpectrum.{name}' for name in
     ('layer_sequential', 'add_layer', 'exists_live_iff', 'maximum', 'extremal_apply', 'extremal_live')
@@ -30,6 +30,10 @@ AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     ('full_coordinate_bound', 'live_iff_full', 'live_card_stable', 'extremal_full',
      'all_full_live_iff', 'live_card_lt', 'live_card_stable_iff', 'live_card_top')
 )
+AUDITED += tuple(f'Mahjong.VirtualHand.CopyCapStability.{name}' for name in
+                 ('coordinate_bound', 'live_iff_full', 'live_card_stable',
+                  'exists_extremal', 'all_full_live_iff', 'live_card_succ',
+                  'live_card_lt', 'live_card_stable_iff'))
 ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
 ENTRY = re.compile(
     r"'([^\n]*?)' (?:depends on axioms:\s*\[([^]]*)\]|does not depend on any axioms)"
@@ -75,7 +79,7 @@ def main():
         audit = build / 'Audit.lean'
         audit.write_text('import Capacity\nimport CapacitySpectrum\nimport OrderOneDuality\n'
                         'import OrderOneBoxes\nimport OrderOnePolynomial\n'
-                        'import OrderOneStability\n\n' + ''.join(
+                        'import OrderOneStability\nimport CopyCapStability\n\n' + ''.join(
             f'#print axioms {name}\n' for name in AUDITED
         ))
         # The audit deliberately uses #print; apply the strict source linters

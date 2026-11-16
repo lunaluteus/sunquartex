@@ -1,0 +1,208 @@
+---
+title: A sharp copy cap at every order
+subtitle: Removing a common triplet from all winning draws
+author:
+  name: Luna Luteus
+date: 2026-11-17
+lang: en
+bibliography: live-waits.bib
+number-sections: true
+resources:
+  - Capacity.lean
+  - LiveMaximum.lean
+  - CopyBound.lean
+  - CapacitySpectrum.lean
+  - OrderOneDuality.lean
+  - OrderOneBoxes.lean
+  - OrderOnePolynomial.lean
+  - OrderOneStability.lean
+  - CopyCapStability.lean
+  - check-lean.py
+abstract: |
+  Every full-sided Mahjong wait on $3n$ ranks with $m$ melds has each
+  multiplicity at most $3(m-n)+1$. For $n\ge2$ this bound is attained at every
+  permitted meld count. Thus the exact copy cap at which all such waits are
+  live, and their count stabilizes, is $3(m-n)+2$. We prove the bound by
+  removing a common triplet, and check the argument in Lean.
+format:
+  html:
+    embed-resources: true
+  pdf:
+    custom-theorem:
+      numbered-alike: false
+  gfm: default
+---
+
+## Fixing the meld count {#sec-question}
+
+Use the model of @xue-zhong-2026: a hand $c=(c_1,\ldots,c_{3n})$ has
+$3m+1$ tiles before drawing. It is a full-sided wait when every rank can be
+drawn to complete $m$ melds and a pair. A meld is a triplet or three consecutive
+ranks. A physical copy cap $q$ makes every draw live precisely when
+
+$$
+c_i+1\le q\qquad(1\le i\le3n).
+$$ {#eq-live}
+
+The [existence note](arbitrary-cap.html) allows $n,m,q$ to vary and asks
+whether at least one live hand exists. Here we fix $n,m$ and ask how large
+$q$ must be to admit **every** full-sided wait. Assume $n\ge1$ and $m>n$,
+the permitted range for an unrestricted full wait.
+
+::: {#thm-coordinate}
+## A uniform coordinate bound
+
+Every full-sided $(n,m)$-wait satisfies
+
+$$
+c_i\le3(m-n)+1\qquad(1\le i\le3n).
+$$
+
+For $n\ge2$, some full wait attains equality.
+:::
+
+Let $F(n,m)$ be the number of full waits without a physical copy cap, and
+$L_q(n,m)$ the number that are live at cap $q$. These are finite counts of
+labelled multiplicity vectors; reflected hands are not identified.
+
+::: {#thm-stability}
+## The exact stabilization cap
+
+For $n\ge2$ and $m>n$, the following are equivalent:
+
+1. Every full-sided $(n,m)$-wait is live at cap $q$.
+2. $L_q(n,m)=F(n,m)$.
+3. $q\ge3(m-n)+2$.
+
+Below this threshold, $L_q(n,m)<F(n,m)$.
+:::
+
+At order one, the [three-rank note](three-ranks.html) gives the slightly
+smaller sharp threshold $q=3m-2$. The bound in @thm-coordinate remains valid
+there, but can be improved by one.
+
+## A large coordinate leaves little elsewhere {#sec-excess}
+
+Put $d=m-n$. Write $b=(0,1,\ldots,1,0)$ for the interior-one hand.
+The interior-positivity theorem gives $c_i\ge b_i$, so the excess
+$e=c-b$ is nonnegative and has total mass
+
+$$
+\begin{aligned}
+\sum_i e_i&=(3m+1)-(3n-2)\\
+&=3d+3.
+\end{aligned}
+$$ {#eq-excess}
+
+Suppose the coordinate bound fails, so $c_i\ge3d+2$. Since $b_i\le1$,
+we have $e_i\ge3d+1$. @eq-excess leaves at most two excess tiles
+at every other rank, and hence
+
+$$
+c_j\le3\qquad(j\ne i).
+$$ {#eq-sparse}
+
+This sparse configuration is what allows a triplet at $i$ to be removed
+simultaneously from all winning draws.
+
+## Why the triplet is common to every draw {#sec-removal}
+
+At the least possible meld count $m=n+1$, the structural classification
+already gives $c_i\le4$, which is @thm-coordinate in this case.
+For the inductive step, $d\ge2$ and therefore $c_i\ge8$.
+
+Draw any rank $p$ and choose a winning pair at rank $r$. After removing
+the pair, the meldable hand
+
+$$
+h=c+\boldsymbol e_p-2\boldsymbol e_r
+$$
+
+still has $h_i\ge6$. Use its canonical meld placement, whose sequence
+coefficient at each starting position is at most two. If this placement
+has no triplet at $i$, the three incident sequence coefficients account
+for at most six tiles there. Since $h_i\ge6$, all three coefficients must
+equal two. In particular the two distinct neighbouring ranks exist and satisfy
+
+$$
+h_{i-1}\ge4,\qquad h_{i+1}\ge4.
+$$
+
+But @eq-sparse says every rank other than $i$ had at most three tiles
+before drawing. Removing a pair cannot increase a multiplicity; only the
+single drawn rank $p$ could reach four. Two distinct neighbours cannot
+both be that rank. This contradiction forces a canonical triplet at $i$.
+
+Thus each winning decomposition admits removal of the same triplet
+$3\boldsymbol e_i$. The hand $c'=c-3\boldsymbol e_i$ is a full-sided
+$(n,m-1)$-wait. Induction gives
+
+$$
+c_i-3=c'_i\le3((m-1)-n)+1,
+$$
+
+which rearranges to @thm-coordinate. This is induction on the meld count,
+using the structural base classification; it does not enumerate candidate
+higher-meld hands.
+
+## A family attaining the bound {#sec-extremal}
+
+For $n\ge2$, take the classified hand
+$B_n=b+3\boldsymbol e_1+3\boldsymbol e_{3n-3}$.
+It is a full wait with $n+1$ melds and has four tiles at rank $3n-3$.
+Adding any triplet preserves every winning draw. Consequently
+
+$$
+c=b+3\boldsymbol e_1+3(m-n)\boldsymbol e_{3n-3}
+$$ {#eq-witness}
+
+is a full-sided $(n,m)$-wait, and $c_{3n-3}=3(m-n)+1$.
+This proves sharpness in @thm-coordinate. For example, at $n=3,m=5$
+the hand is
+
+$$
+(3,1,1,1,1,7,1,1,0).
+$$
+
+It is live at cap eight and excluded at cap seven.
+
+@eq-live and the coordinate bound make every full wait live at
+$q\ge3(m-n)+2$. Below this threshold the hand in @eq-witness is missing.
+The unrestricted full-wait set is finite: every coordinate is a nonnegative
+integer bounded by @thm-coordinate. A proper subset therefore has strictly
+smaller cardinality, proving @thm-stability as a statement about counts too.
+
+::: {#cor-eight}
+## All eight hands become live at cap five
+
+For $n\ge2$ and $m=n+1$, the live count is zero for $q\le3$, one for
+$q=4$, and eight for every $q\ge5$.
+:::
+
+The earlier minimum-cap result excludes $q\le3$. The classification gives
+the unique cap-four live hand and eight unrestricted full waits. The new
+threshold $3((n+1)-n)+2=5$ then admits all eight.
+
+## Checked Lean source {#sec-lean}
+
+[CopyCapStability.lean](CopyCapStability.lean) proves the coordinate bound,
+an extremal witness, the sharp uniform cap, strict inequality of counts
+below it, and the count of eight at cap five or above. The triplet-removal
+and finiteness arguments are included in the same module.
+
+The sources use Lean 4.35.0 against the structural library at
+[this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
+From this SunQuarTeX checkout, run:
+
+```sh
+uv run python examples/live-waits/check-lean.py \
+  --library /path/to/ninegates-lean4
+```
+
+The [checker](check-lean.py) compiles nine source modules in a fresh temporary
+directory with strict linters, then audits forty declarations. Only
+`propext`, `Classical.choice`, and `Quot.sound` are permitted. Rendering the
+document is separate from checking the proofs. These notes remain an
+independent experiment in this fork.
+
+## References {#sec-references}
