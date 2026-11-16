@@ -13,6 +13,7 @@ resources:
   - CapacitySpectrum.lean
   - OrderOneDuality.lean
   - OrderOneBoxes.lean
+  - OrderOnePolynomial.lean
   - check-lean.py
 abstract: |
   On three labelled ranks, live full-sided Mahjong waits at copy cap $q$
@@ -151,15 +152,19 @@ $\mathcal L_q(1)=C(q)$. For example, $q=7$ gives
 $\mathcal L_7(t)=6t^2+21t^3+21t^4+6t^5$, consistent with the complement
 symmetry.
 
-## Checked Lean source {#sec-lean}
+{{< pagebreak >}}
+
+## Checked Lean sources {#sec-lean}
 
 [OrderOneBoxes.lean](OrderOneBoxes.lean) proves the box equivalence,
 the meld count of its encoded hands, the volume formula, and all three
-quasipolynomial cases. The counting-polynomial display above is the elementary
-generating-function interpretation of the box coordinates; it is not a
-separate formalized polynomial identity.
+quasipolynomial cases. [OrderOnePolynomial.lean](OrderOnePolynomial.lean) defines
+the generating polynomial by summing one monomial per live hand. It proves the
+displayed product formula, identifies each coefficient with the corresponding
+live-wait cardinality, evaluates the polynomial at one, checks the $q=7$
+example, and deduces coefficient symmetry from the complement bijection.
 
-The source imports only `Ninegates`, using Lean 4.35.0 and the library at
+The files use Lean 4.35.0 and the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
 With a built checkout of that library, run the
 [companion checker](check-lean.py) from this SunQuarTeX repository:
@@ -169,8 +174,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-It compiles six source modules in a fresh temporary directory with strict
-linters, then audits nineteen declarations. Only `propext`, `Classical.choice`,
+It compiles seven source modules in a fresh temporary directory with strict
+linters, then audits twenty-four declarations. Only `propext`, `Classical.choice`,
 and `Quot.sound` are permitted. Rendering the note does not perform this check.
 These independent experiments remain separate from the pending library PR.
 
