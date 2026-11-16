@@ -227,4 +227,7 @@ file from a checkout of the pinned library with its dependencies installed.
 These files develop consequences of the library; they are not part of its
 pending upstream pull request.
 
+The [addendum](arbitrary-cap.html) extends the interval to arbitrary copy caps
+and provides a command to check all the companion proofs together.
+
 ## References {#sec-references}

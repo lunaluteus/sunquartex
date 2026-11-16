@@ -1,0 +1,140 @@
+---
+title: Live waits at any copy cap
+subtitle: An addendum to Two sharp limits for live waits
+author:
+  name: Luna Luteus
+date: 2026-11-17
+lang: en
+bibliography: live-waits.bib
+resources:
+  - Capacity.lean
+  - LiveMaximum.lean
+  - CopyBound.lean
+  - CapacitySpectrum.lean
+  - check-lean.py
+abstract: |
+  On $3n$ ranks, a live full-sided Mahjong wait with $m$ melds and copy cap
+  $q$ exists exactly when $q\ge4$ and $n<m<n(q-1)$. The cap-four construction
+  extends to every larger cap by adding complete layers of sequences. The
+  sharp upper endpoint has a uniform explicit witness.
+format:
+  html:
+    embed-resources: true
+  pdf:
+    custom-theorem:
+      numbered-alike: false
+  gfm: default
+---
+
+## The complete existence interval {#sec-interval}
+
+Use the full-sided-wait model of @xue-zhong-2026, with $3n$ ranks and
+$3m+1$ tiles before drawing. A meld is a triplet or three consecutive ranks.
+The physical copy cap $q$ means that each multiplicity $c_i$ satisfies
+$c_i+1\le q$ for a live draw. Here the copy cap is allowed to vary.
+
+The [earlier note](live-waits.html) established the exact cap-four interval
+and the necessity of at least four physical copies. These combine into a
+complete answer for arbitrary natural $q$.
+
+::: {#thm-any-cap}
+## Existence at any cap
+
+For natural numbers $n,q,m$, a live full-sided wait exists if and only if
+
+$$
+\begin{gathered}
+q\ge4,\\
+n<m<n(q-1).
+\end{gathered}
+$$
+:::
+
+The inequalities exclude order zero automatically. For every cap $q\ge4$
+at positive order $n$, the least possible meld count is $n+1$.
+
+::: {.proof}
+
+Necessity follows from three bounds: every full-sided wait has $m>n$;
+some rank contains at least three tiles, so liveness requires $q\ge4$;
+and summing $c_i\le q-1$ gives $3m+1\le3n(q-1)$.
+
+For sufficiency, induct on $q-4$. Cap four is the earlier construction.
+At a larger cap, if $m<3n$, the same cap-four hand still works.
+Otherwise $m\ge3n$ and
+
+$$
+n<m-n<n(q-2).
+$$
+
+The induction hypothesis supplies a hand at cap $q-1$ with $m-n$ melds.
+Add the $n$ disjoint sequences
+
+$$
+\begin{gathered}
+(1,2,3),\ (4,5,6),\ \ldots,\\
+(3n-2,3n-1,3n).
+\end{gathered}
+$$
+
+Each multiplicity increases by exactly one, and the meld count increases by
+$n$. Every old winning decomposition extends by these sequences, while the
+new hand respects cap $q$. This proves @thm-any-cap.
+:::
+
+::: {#tbl-nine-ranks}
+
+| Copy cap | Possible meld counts for $n=3$ |
+|:--------:|:-------------------------------|
+| $3$      | None                           |
+| $4$      | $4,\ldots,8$                    |
+| $5$      | $4,\ldots,11$                   |
+| $6$      | $4,\ldots,14$                   |
+
+The exact intervals on nine ranks. These are existence results, rather than
+counts of hands.
+:::
+
+## A sharp endpoint with an explicit witness {#sec-maximum}
+
+::: {#cor-maximum}
+## Largest live meld count
+
+For $n>0$ and $q\ge4$, the largest live meld count is $n(q-1)-1$.
+One extremal hand has $q-1$ copies of every rank except for $q-3$ copies
+of the penultimate rank:
+
+$$
+(\underbrace{q-1,\ldots,q-1}_{3n-2},q-3,q-1).
+$$
+:::
+
+Start with the cap-four extremal hand and add $q-4$ complete layers.
+This gives the displayed multiplicities, preserves every winning draw,
+and raises the meld count to $n(q-1)-1$. For example, at $n=3,q=5$ the hand
+$(4,4,4,4,4,4,4,2,4)$ attains eleven melds.
+
+## Checked Lean sources {#sec-lean}
+
+[CapacitySpectrum.lean](CapacitySpectrum.lean) proves the equivalence,
+the maximal count, and the coordinates and liveness of the displayed witness.
+Its `add_layer` lemma implements the induction step. It imports the two
+earlier files [LiveMaximum.lean](LiveMaximum.lean) and
+[CopyBound.lean](CopyBound.lean).
+
+The sources use Lean 4.35.0 and the structural library at
+[this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
+From this SunQuarTeX checkout, run:
+
+```sh
+uv run python examples/live-waits/check-lean.py \
+  --library /path/to/ninegates-lean4
+```
+
+The [checker](check-lean.py) compiles the four companion modules with strict
+linters in a temporary directory, then checks that the seven audited
+declarations use only `propext`, `Classical.choice`, and `Quot.sound`.
+Rendering the document displays the mathematics; this command separately
+checks the proofs. The construction uses no enumeration of candidate hands.
+
+## References {#sec-references}
