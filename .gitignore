@@ -15,6 +15,7 @@ uv.lock
 # Quarto-generated files
 /.quarto/
 /_output/
+/site_libs/
 
 /.luarc.json
 

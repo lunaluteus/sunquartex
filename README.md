@@ -47,7 +47,7 @@ PDF / Beamer 输出等可选项安装和使用方法参见后文 [@sec-optional]
 
 - 使用 `--to` 参数指定输出类型，包括 `html`, `pdf`， `beamer`, `docx`, `gfm`．如果已经在文档头中 `format` 选项下列明输出格式，也可不在命令行中指定该选项．
 
-示例文件请在 [`examples/`](examples/) 目录下查看．其中或包含可选支持内容，请安装相应依赖或删除对应内容后渲染．
+示例文件位于 `examples/` 目录，可从 [Hello World 示例](examples/helloworld.qmd) 开始．其中或包含可选支持内容，请安装相应依赖或删除对应内容后渲染．
 
 ### 写作
 
@@ -436,7 +436,7 @@ HTML 输出将每张 SVG 作为独立图片嵌入，保留矢量图，同时避�
 
 ### Lean 代码高亮与带注释源码导入
 
-[`assets/lean.xml`](assets/lean.xml) 用于 Pandoc 的 Lean 代码高亮．直接使用 `lean` 作为代码块的语言标记即可．
+[`_assets/lean.xml`](_assets/lean.xml) 用于 Pandoc 的 Lean 代码高亮．直接使用 `lean` 作为代码块的语言标记即可．
 
 [`_assets/lean-include.lua`](_assets/lean-include.lua) shortcode 用于直接将带有注释的 Lean 代码导入转换为 Markdown．使用如下格式即可导入：
 
