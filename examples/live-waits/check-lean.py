@@ -9,11 +9,14 @@ import subprocess
 import tempfile
 
 
-SOURCES = ('Capacity.lean', 'LiveMaximum.lean', 'CopyBound.lean', 'CapacitySpectrum.lean')
+SOURCES = ('Capacity.lean', 'LiveMaximum.lean', 'CopyBound.lean', 'CapacitySpectrum.lean',
+           'OrderOneDuality.lean')
 AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     f'Mahjong.VirtualHand.LiveSpectrum.{name}' for name in
     ('layer_sequential', 'add_layer', 'exists_live_iff', 'maximum', 'extremal_apply', 'extremal_live')
-)
+) + tuple(f'Mahjong.VirtualHand.OrderOne.{name}' for name in
+          ('fixedClass_dual', 'dual_involutive', 'size_dual', 'dual_live',
+           'liveDualEquiv', 'live_card_symmetry'))
 ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
 ENTRY = re.compile(
     r"'([^\n]*?)' (?:depends on axioms:\s*\[([^]]*)\]|does not depend on any axioms)"
@@ -57,7 +60,7 @@ def main():
             if output.strip():
                 raise SystemExit(f'Unexpected compiler output for {name}:\n{output}')
         audit = build / 'Audit.lean'
-        audit.write_text('import Capacity\nimport CapacitySpectrum\n\n' + ''.join(
+        audit.write_text('import Capacity\nimport CapacitySpectrum\nimport OrderOneDuality\n\n' + ''.join(
             f'#print axioms {name}\n' for name in AUDITED
         ))
         # The audit deliberately uses #print; apply the strict source linters

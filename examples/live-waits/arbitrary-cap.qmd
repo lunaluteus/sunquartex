@@ -11,12 +11,14 @@ resources:
   - LiveMaximum.lean
   - CopyBound.lean
   - CapacitySpectrum.lean
+  - OrderOneDuality.lean
   - check-lean.py
 abstract: |
   On $3n$ ranks, a live full-sided Mahjong wait with $m$ melds and copy cap
   $q$ exists exactly when $q\ge4$ and $n<m<n(q-1)$. The cap-four construction
   extends to every larger cap by adding complete layers of sequences. The
   sharp upper endpoint has a uniform explicit witness.
+  For three ranks, a complement involution exchanges meld counts $m$ and $q-m$.
 format:
   html:
     embed-resources: true
@@ -114,6 +116,57 @@ This gives the displayed multiplicities, preserves every winning draw,
 and raises the meld count to $n(q-1)-1$. For example, at $n=3,q=5$ the hand
 $(4,4,4,4,4,4,4,2,4)$ attains eleven melds.
 
+## A complement duality on three ranks {#sec-duality}
+
+At order $n=1$, the existence interval $2\le m\le q-2$ is symmetric about
+$q/2$. There is also an explicit bijection explaining the symmetry of the
+numbers of hands.
+
+For an integer hand $c=(c_1,c_2,c_3)$, let $s$ be the unique rank in
+$\{1,2,3\}$ congruent to $\sum_i i c_i$ modulo three. The order-one
+characterization in the structural library says that $c$ is a full-sided
+wait precisely when it has size $3m+1$, $c_s\ge1$, and $c_i\ge2$ for $i\ne s$.
+Liveness adds the upper bound $c_i\le q-1$.
+
+::: {#thm-duality}
+## Three-rank complement
+
+For $m\le q$, the map
+
+$$
+D_q(c)_i =
+\begin{cases}
+q-c_i, & i=s,\\
+q+1-c_i, & i\ne s
+\end{cases}
+$$
+
+is a bijection between live full-sided waits at meld counts $m$ and $q-m$,
+with the same copy cap $q$. Its inverse is itself.
+:::
+
+::: {.proof}
+
+The weighted sum of the constant triple $(q+1,q+1,q+1)$ is divisible by
+three. Subtracting $c$ and one additional tile at rank $s$ gives weighted
+residue $-s-s=s$ modulo three. Thus $D_q(c)$ has the same distinguished rank
+$s$, and applying $D_q$ twice returns $c$.
+
+At $s$, the map reflects the integer interval $[1,q-1]$ into itself;
+at the other two ranks it reflects $[2,q-1]$. It therefore preserves the
+full-wait lower bounds and the live upper bounds. Finally,
+
+$$
+\sum_i D_q(c)_i=3q+2-\sum_i c_i=3(q-m)+1.
+$$
+
+The order-one characterization proves the claim in both directions.
+:::
+
+For example, at cap $q=5$, $(3,1,3)$ maps to $(3,4,3)$, exchanging meld counts
+two and three. Consequently the live-wait counts are equal at $m$ and $q-m$.
+This duality concerns three ranks; no higher-order analogue is asserted here.
+
 ## Checked Lean sources {#sec-lean}
 
 [CapacitySpectrum.lean](CapacitySpectrum.lean) proves the equivalence,
@@ -121,6 +174,9 @@ the maximal count, and the coordinates and liveness of the displayed witness.
 Its `add_layer` lemma implements the induction step. It imports the two
 earlier files [LiveMaximum.lean](LiveMaximum.lean) and
 [CopyBound.lean](CopyBound.lean).
+[OrderOneDuality.lean](OrderOneDuality.lean) proves the complement's fixed-class
+invariance, involutivity, size formula, preservation of liveness, the explicit
+equivalence, and the equality of cardinalities.
 
 The sources use Lean 4.35.0 and the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
@@ -131,8 +187,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-The [checker](check-lean.py) compiles the four companion modules with strict
-linters in a temporary directory, then checks that the seven audited
+The [checker](check-lean.py) compiles the five companion modules with strict
+linters in a temporary directory, then checks that the thirteen audited
 declarations use only `propext`, `Classical.choice`, and `Quot.sound`.
 Rendering the document displays the mathematics; this command separately
 checks the proofs. The construction uses no enumeration of candidate hands.
