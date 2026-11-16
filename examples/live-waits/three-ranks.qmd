@@ -1,0 +1,177 @@
+---
+title: Counting live waits on three ranks
+subtitle: Three integer boxes and a cubic counting formula
+author:
+  name: Luna Luteus
+date: 2026-11-17
+lang: en
+bibliography: live-waits.bib
+resources:
+  - Capacity.lean
+  - LiveMaximum.lean
+  - CopyBound.lean
+  - CapacitySpectrum.lean
+  - OrderOneDuality.lean
+  - OrderOneBoxes.lean
+  - check-lean.py
+abstract: |
+  On three labelled ranks, live full-sided Mahjong waits at copy cap $q$
+  admit a bijection with three cyclic positions and three integer boxes.
+  This gives the total number of hands as a cubic quasipolynomial of period
+  three, with a structural Lean proof for every $q\ge4$.
+format:
+  html:
+    embed-resources: true
+  pdf:
+    custom-theorem:
+      numbered-alike: false
+  gfm: default
+---
+
+## What is being counted? {#sec-counting}
+
+Use the full-sided-wait model of @xue-zhong-2026 at order $n=1$: there are
+three labelled ranks, and each meld is a triplet or one copy of every rank.
+Let $C(q)$ count the multiplicity triples that are live full-sided waits at
+copy cap $q$, allowing every meld count $m$. Each triple is counted once;
+its size $3m+1$ determines $m$. Cyclically rotated triples are distinct hands.
+
+The [existence theorem](arbitrary-cap.html) restricts $m$ to
+$2\le m\le q-2$ when $q\ge4$. The complement involution in that note pairs
+the counts at $m$ and $q-m$. Here we compute their total without listing
+candidate hands.
+
+::: {#thm-total}
+## Total count
+
+For $q\ge4$, the number of live hands is given by
+
+$$
+\begin{aligned}
+C(3k)&=3k(k-1)(3k-2),\\
+C(3k+1)&=3k\bigl(2k^2+(k-1)^2\bigr),\\
+C(3k+2)&=3k^2(3k+1).
+\end{aligned}
+$$
+
+The first case has $k\ge2$; the other two have $k\ge1$.
+:::
+
+For $q=4,5,6,7,8,9,10$, respectively, the totals are
+$6,12,24,54,84,126,198$. These are totals across all meld counts, rather
+than the count at one fixed $m$.
+
+## A bijection with boxes {#sec-boxes}
+
+For a hand $c$, let its distinguished rank be the unique rank congruent
+to $\sum_i i c_i$ modulo three. The order-one characterization in the
+structural library gives a complete test: a hand of size $3m+1$ is full-sided
+exactly when it has at least one tile at the distinguished rank and at least
+two at each other rank. Liveness adds $c_i\le q-1$.
+
+Since $\sum_i c_i\equiv1\pmod3$, moving each coordinate cyclically forward by
+one changes the weighted residue by one. Cyclic rotation preserves both
+the threshold test and the copy bound. Exactly one of the three rotations
+has distinguished rank three, so it suffices to describe that rotation and
+record its cyclic position.
+
+In this position the congruences become
+
+$$
+\begin{aligned}
+c_1&\equiv c_2\pmod3,\\
+c_3&\equiv c_1+1\pmod3.
+\end{aligned}
+$$
+
+Together with $c_1,c_2\ge2$ and $c_3\ge1$, these force precisely the three
+shapes in @tbl-boxes. Every parameter is a nonnegative integer. A side length
+$L$ means the parameter ranges over $0,\ldots,L-1$; length zero means an
+empty box.
+
+::: {#tbl-boxes}
+
+| $r$ | Hand | Box sides |
+|:--------------:|:-----|:----------------------------|
+| $0$ | $(3a+3,3b+3,3d+1)$ | $A_0,A_0,B_0$ |
+| $1$ | $(3a+4,3b+4,3d+2)$ | $A_1,A_1,B_1$ |
+| $2$ | $(3a+2,3b+2,3d+3)$ | $A_2,A_2,B_2$ |
+
+The three disjoint boxes for distinguished rank three.
+:::
+
+The copy bound gives the side lengths
+
+$$
+\begin{aligned}
+A_0&=\lfloor(q-1)/3\rfloor,& B_0&=\lfloor(q+1)/3\rfloor,\\
+A_1&=\lfloor(q-2)/3\rfloor,& B_1&=\lfloor q/3\rfloor,\\
+A_2&=\lfloor q/3\rfloor,& B_2&=\lfloor(q-1)/3\rfloor.
+\end{aligned}
+$$
+
+Conversely, every point in any of these boxes satisfies the threshold and
+copy bounds, has size one modulo three, and hence is a live full-sided wait.
+The common residue selects the box uniquely; division by three recovers its
+coordinates. The distinguished rank recovers the cyclic position uniquely.
+This proves the asserted bijection.
+
+::: {.proof}
+
+The box volumes and the three cyclic positions give
+
+$$
+C(q)=3\bigl(A_0^2 B_0+A_1^2 B_1+A_2^2 B_2\bigr).
+$$
+
+Substituting $q=3k$, $3k+1$, or $3k+2$ into the six floor functions yields
+@thm-total. The argument counts all integer points of rectangular boxes by
+products of side lengths; it does not enumerate hands.
+:::
+
+## Keeping track of meld count {#sec-melds}
+
+The box construction retains more information than the total volume.
+In the first and third rows of @tbl-boxes, the meld count is $a+b+d+2$;
+in the second it is $a+b+d+3$. Cyclic position does not change it.
+
+Writing $G_L(t)=1+t+\cdots+t^{L-1}$ and $G_0(t)=0$, the bijection therefore
+gives the counting polynomial
+
+$$
+\begin{aligned}
+\mathcal L_q(t)=3t^2\bigl(&G_{A_0}(t)^2G_{B_0}(t)\\
+&+tG_{A_1}(t)^2G_{B_1}(t)\\
+&+G_{A_2}(t)^2G_{B_2}(t)\bigr).
+\end{aligned}
+$$
+
+Its coefficient of $t^m$ counts live hands with $m$ melds, and
+$\mathcal L_q(1)=C(q)$. For example, $q=7$ gives
+$\mathcal L_7(t)=6t^2+21t^3+21t^4+6t^5$, consistent with the complement
+symmetry.
+
+## Checked Lean source {#sec-lean}
+
+[OrderOneBoxes.lean](OrderOneBoxes.lean) proves the box equivalence,
+the meld count of its encoded hands, the volume formula, and all three
+quasipolynomial cases. The counting-polynomial display above is the elementary
+generating-function interpretation of the box coordinates; it is not a
+separate formalized polynomial identity.
+
+The source imports only `Ninegates`, using Lean 4.35.0 and the library at
+[this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
+With a built checkout of that library, run the
+[companion checker](check-lean.py) from this SunQuarTeX repository:
+
+```sh
+uv run python examples/live-waits/check-lean.py \
+  --library /path/to/ninegates-lean4
+```
+
+It compiles six source modules in a fresh temporary directory with strict
+linters, then audits nineteen declarations. Only `propext`, `Classical.choice`,
+and `Quot.sound` are permitted. Rendering the note does not perform this check.
+These independent experiments remain separate from the pending library PR.
+
+## References {#sec-references}

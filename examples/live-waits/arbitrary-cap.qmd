@@ -12,6 +12,7 @@ resources:
   - CopyBound.lean
   - CapacitySpectrum.lean
   - OrderOneDuality.lean
+  - OrderOneBoxes.lean
   - check-lean.py
 abstract: |
   On $3n$ ranks, a live full-sided Mahjong wait with $m$ melds and copy cap
@@ -166,6 +167,8 @@ The order-one characterization proves the claim in both directions.
 For example, at cap $q=5$, $(3,1,3)$ maps to $(3,4,3)$, exchanging meld counts
 two and three. Consequently the live-wait counts are equal at $m$ and $q-m$.
 This duality concerns three ranks; no higher-order analogue is asserted here.
+The [three-rank counting note](three-ranks.html) gives a disjoint box
+decomposition and an exact formula for the total number of live hands.
 
 ## Checked Lean sources {#sec-lean}
 
@@ -187,8 +190,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-The [checker](check-lean.py) compiles the five companion modules with strict
-linters in a temporary directory, then checks that the thirteen audited
+The [checker](check-lean.py) compiles the six companion modules with strict
+linters in a temporary directory, then checks that the nineteen audited
 declarations use only `propext`, `Classical.choice`, and `Quot.sound`.
 Rendering the document displays the mathematics; this command separately
 checks the proofs. The construction uses no enumeration of candidate hands.

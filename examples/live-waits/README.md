@@ -4,7 +4,8 @@ An English mathematical note using SunQuarTeX's native theorem, equation, figure
 and table references; a computed Matplotlib figure; bibliography; and annotated
 Lean source inclusion. The companion addendum `arbitrary-cap.qmd` extends the
 existence interval to every copy cap and gives an explicit three-rank duality.
-Both sources render to HTML, PDF, and GitHub Markdown.
+The third note `three-ranks.qmd` counts all live hands on three ranks by a
+disjoint box decomposition. All three sources render to HTML, PDF, and GitHub Markdown.
 The PDF overrides the shared theorem counter so its theorem numbers agree with
 the other two formats.
 
@@ -14,13 +15,14 @@ From the repository root, with Quarto and `uv` installed:
 uv sync
 uv run quarto render examples/live-waits/live-waits.qmd --to all --quiet
 uv run quarto render examples/live-waits/arbitrary-cap.qmd --to all --quiet
+uv run quarto render examples/live-waits/three-ranks.qmd --to all --quiet
 ```
 
 PDF also needs a TeX installation; `quarto install tinytex` is one option.
 Outputs are placed in `_output/examples/live-waits/`. The HTML embeds its visual
 assets; keep the adjacent `.lean` files and `check-lean.py` when sharing source links.
 When sharing the Markdown, also keep its `live-waits_files/` image directory.
-Links between the two rendered notes point to their HTML companions.
+Links between the rendered notes point to their HTML companions.
 
 Rendering includes Lean code as text and does not check it. With a built checkout
 of `lunaluteus/ninegates-lean4` at
@@ -30,9 +32,11 @@ of `lunaluteus/ninegates-lean4` at
 uv run python examples/live-waits/check-lean.py --library /path/to/ninegates-lean4
 ```
 
-The checker builds all five Lean modules in a temporary directory with strict
-linters, then audits thirteen declarations against the three standard axioms.
+The checker builds all six Lean modules in a temporary directory with strict
+linters, then audits nineteen declarations against the three standard axioms.
 Use `--lake /path/to/lake` if the pinned toolchain is not on `PATH`.
+In a standalone export, run `python check-lean.py --library /path/to/ninegates-lean4`
+from the exported folder instead.
 
 The mathematical reference is Xue and Zhong, *Beyond Nine Gates*,
 [arXiv:2611.06944v1](https://arxiv.org/abs/2611.06944v1). The additional Lean
