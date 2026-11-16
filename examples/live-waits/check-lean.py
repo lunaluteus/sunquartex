@@ -10,7 +10,8 @@ import tempfile
 
 
 SOURCES = ('Capacity.lean', 'LiveMaximum.lean', 'CopyBound.lean', 'CapacitySpectrum.lean',
-           'OrderOneDuality.lean', 'OrderOneBoxes.lean', 'OrderOnePolynomial.lean')
+           'OrderOneDuality.lean', 'OrderOneBoxes.lean', 'OrderOnePolynomial.lean',
+           'OrderOneStability.lean')
 AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     f'Mahjong.VirtualHand.LiveSpectrum.{name}' for name in
     ('layer_sequential', 'add_layer', 'exists_live_iff', 'maximum', 'extremal_apply', 'extremal_live')
@@ -24,6 +25,10 @@ AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     f'Mahjong.VirtualHand.OrderOne.Generating.{name}' for name in
     ('livePolynomial_formula', 'livePolynomial_coeff', 'livePolynomial_eval_one',
      'livePolynomial_seven', 'livePolynomial_coeff_symmetry')
+) + tuple(
+    f'Mahjong.VirtualHand.OrderOne.Stability.{name}' for name in
+    ('full_coordinate_bound', 'live_iff_full', 'live_card_stable', 'extremal_full',
+     'all_full_live_iff', 'live_card_lt', 'live_card_stable_iff', 'live_card_top')
 )
 ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
 ENTRY = re.compile(
@@ -69,7 +74,8 @@ def main():
                 raise SystemExit(f'Unexpected compiler output for {name}:\n{output}')
         audit = build / 'Audit.lean'
         audit.write_text('import Capacity\nimport CapacitySpectrum\nimport OrderOneDuality\n'
-                        'import OrderOneBoxes\nimport OrderOnePolynomial\n\n' + ''.join(
+                        'import OrderOneBoxes\nimport OrderOnePolynomial\n'
+                        'import OrderOneStability\n\n' + ''.join(
             f'#print axioms {name}\n' for name in AUDITED
         ))
         # The audit deliberately uses #print; apply the strict source linters

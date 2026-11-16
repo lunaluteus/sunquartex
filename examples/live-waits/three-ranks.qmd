@@ -14,6 +14,7 @@ resources:
   - OrderOneDuality.lean
   - OrderOneBoxes.lean
   - OrderOnePolynomial.lean
+  - OrderOneStability.lean
   - check-lean.py
 abstract: |
   On three labelled ranks, live full-sided Mahjong waits at copy cap $q$
@@ -152,6 +153,49 @@ $\mathcal L_q(1)=C(q)$. For example, $q=7$ gives
 $\mathcal L_7(t)=6t^2+21t^3+21t^4+6t^5$, consistent with the complement
 symmetry.
 
+## When a fixed-meld count stabilizes {#sec-stability}
+
+Without a copy cap, the structural library counts exactly
+$\binom{3m-2}{2}$ full-sided waits for $m\ge2$. The live count reaches this
+value at a precise threshold.
+
+::: {#thm-stability}
+## Sharp stabilization threshold
+
+Fix $m\ge2$. At copy cap $q$, the number of live full-sided waits with $m$
+melds equals $\binom{3m-2}{2}$ if and only if $q\ge3m-2$.
+Below this cap the live count is strictly smaller.
+:::
+
+::: {.proof}
+
+Every three-rank full wait of size $3m+1$ has $c_i\le3m-3$ for each rank.
+The threshold test initially gives $c_i\le3m-2$ at a nondistinguished rank.
+Equality would leave exactly one tile at the distinguished rank and two at
+the other rank; the weighted residue is then incompatible with the chosen
+distinguished rank, a contradiction. At the distinguished rank the other two lower
+bounds already give $c_i\le3m-3$.
+
+Thus $q\ge3m-2$ makes every full wait live. The full wait
+$(3m-3,1,3)$ attains the coordinate bound, and is not live when $q<3m-2$.
+In that case the live hands form a proper subset of the finite set of full
+waits, so their count is strictly smaller.
+:::
+
+For instance, the counts at $m=2,3,4$ stabilize at caps $4,7,10$, reaching
+$6,21,45$, respectively.
+
+::: {#cor-six-top}
+## Six hands at the upper endpoint
+
+For every $q\ge4$, exactly six live hands have the largest possible meld
+count $m=q-2$.
+:::
+
+The complement pairs this count with the count at $m=2$, which is already
+stable at cap four. In particular, this endpoint count stays fixed even
+while the total $C(q)$ grows cubically.
+
 {{< pagebreak >}}
 
 ## Checked Lean sources {#sec-lean}
@@ -163,6 +207,9 @@ the generating polynomial by summing one monomial per live hand. It proves the
 displayed product formula, identifies each coefficient with the corresponding
 live-wait cardinality, evaluates the polynomial at one, checks the $q=7$
 example, and deduces coefficient symmetry from the complement bijection.
+[OrderOneStability.lean](OrderOneStability.lean) proves the coordinate bound,
+the sharp stabilization threshold, strict inequality below it, and the six-hand
+upper-endpoint count.
 
 The files use Lean 4.35.0 and the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
@@ -174,8 +221,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-It compiles seven source modules in a fresh temporary directory with strict
-linters, then audits twenty-four declarations. Only `propext`, `Classical.choice`,
+It compiles eight source modules in a fresh temporary directory with strict
+linters, then audits thirty-two declarations. Only `propext`, `Classical.choice`,
 and `Quot.sound` are permitted. Rendering the note does not perform this check.
 These independent experiments remain separate from the pending library PR.
 

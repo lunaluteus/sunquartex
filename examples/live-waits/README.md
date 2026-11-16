@@ -6,7 +6,8 @@ Lean source inclusion. The companion addendum `arbitrary-cap.qmd` extends the
 existence interval to every copy cap and gives an explicit three-rank duality.
 The third note `three-ranks.qmd` counts all live hands on three ranks by a
 disjoint box decomposition and proves the generating polynomial for individual
-meld counts. All three sources render to HTML, PDF, and GitHub Markdown.
+meld counts. It also identifies the sharp copy cap at which each fixed-meld count
+stabilizes. All three sources render to HTML, PDF, and GitHub Markdown.
 The PDF overrides the shared theorem counter so its theorem numbers agree with
 the other two formats.
 
@@ -33,8 +34,8 @@ of `lunaluteus/ninegates-lean4` at
 uv run python examples/live-waits/check-lean.py --library /path/to/ninegates-lean4
 ```
 
-The checker builds all seven Lean modules in a temporary directory with strict
-linters, then audits twenty-four declarations against the three standard axioms.
+The checker builds all eight Lean modules in a temporary directory with strict
+linters, then audits thirty-two declarations against the three standard axioms.
 Use `--lake /path/to/lake` if the pinned toolchain is not on `PATH`.
 In a standalone export, run `python check-lean.py --library /path/to/ninegates-lean4`
 from the exported folder instead.
