@@ -12,7 +12,7 @@ import tempfile
 SOURCES = ('Capacity.lean', 'LiveMaximum.lean', 'CopyBound.lean', 'CapacitySpectrum.lean',
            'OrderOneDuality.lean', 'OrderOneBoxes.lean', 'OrderOnePolynomial.lean',
            'OrderOneStability.lean', 'CopyCapStability.lean',
-           'TripletCore.lean', 'TripletCounting.lean', 'TripletLeading.lean',
+           'BoundaryTriplets.lean', 'TripletCore.lean', 'TripletCounting.lean', 'TripletLeading.lean',
            'FullWaitDensity.lean', 'PolynomialStart.lean')
 AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     f'Mahjong.VirtualHand.LiveSpectrum.{name}' for name in
@@ -59,6 +59,12 @@ AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
                   'polynomialStart_le', 'polynomial_boundary_error',
                   'eventualPolynomial_ne_before_start', 'polynomialStart_optimal',
                   'exists_countingPolynomial_iff'))
+AUDITED += tuple(f'Mahjong.VirtualHand.{name}' for name in
+                 ('Meldable.sub_triplet_of_threshold', 'IsFullWait.sub_triplet_of_threshold',
+                  'IsMinimalFullWait.boundary_bounded', 'abundanceThreshold_size',
+                  'IsMinimalFullWait.meldCount_lt_boundary'))
+AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
+                 ('CoreBounded.bounded_eight', 'polynomialBound_le_five'))
 ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
 ENTRY = re.compile(
     r"'([^\n]*?)' (?:depends on axioms:\s*\[([^]]*)\]|does not depend on any axioms)"
@@ -105,7 +111,7 @@ def main():
         audit.write_text('import Capacity\nimport CapacitySpectrum\nimport OrderOneDuality\n'
                         'import OrderOneBoxes\nimport OrderOnePolynomial\n'
                         'import OrderOneStability\nimport CopyCapStability\n'
-                        'import TripletCore\nimport TripletCounting\nimport TripletLeading\n'
+                        'import BoundaryTriplets\nimport TripletCore\nimport TripletCounting\nimport TripletLeading\n'
                         'import FullWaitDensity\nimport PolynomialStart\n\n' + ''.join(
             f'#print axioms {name}\n' for name in AUDITED
         ))

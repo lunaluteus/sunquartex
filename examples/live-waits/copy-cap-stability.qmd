@@ -17,6 +17,7 @@ resources:
   - OrderOnePolynomial.lean
   - OrderOneStability.lean
   - CopyCapStability.lean
+  - BoundaryTriplets.lean
   - TripletCore.lean
   - TripletCounting.lean
   - TripletLeading.lean
@@ -207,8 +208,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-The [checker](check-lean.py) compiles fourteen source modules in a fresh temporary
-directory with strict linters, then audits eighty-four declarations. Only
+The [checker](check-lean.py) compiles fifteen source modules in a fresh temporary
+directory with strict linters, then audits ninety-one declarations. Only
 `propext`, `Classical.choice`, and `Quot.sound` are permitted. Rendering the
 document is separate from checking the proofs. These notes remain an
 independent experiment in this fork.

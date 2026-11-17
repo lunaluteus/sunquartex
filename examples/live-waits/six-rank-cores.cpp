@@ -32,6 +32,13 @@ template <int D> struct Checker {
   Count comparisons = 0;
   std::unordered_map<std::uint64_t, bool> meld_memo;
 
+  // The same local abundance profile used by the Lean core decomposition.
+  static int threshold(int i) {
+    if (i == 0 || i + 1 == D) return 2;
+    if (i == 1 || i + 2 == D) return 4;
+    return 6;
+  }
+
   static int key(const Hand& c) {
     int result = 0, power = 1;
     for (int x : c) {
@@ -151,19 +158,23 @@ template <int D> void experiment() {
   using Hand = typename Checker<D>::Hand;
   std::map<std::pair<int,int>, Count> histogram;
   int candidates = 1;
-  for (int i = 0; i < D; ++i) candidates *= 9;
+  for (int i = 0; i < D; ++i) candidates *= Checker<D>::threshold(i) + 3;
   Count congruent = 0, cores = 0;
   for (int code = 0; code < candidates; ++code) {
     Hand c{};
     int rest = code;
-    for (int& x : c) { x = rest % 9; rest /= 9; }
+    for (int i = 0; i < D; ++i) {
+      int radix = Checker<D>::threshold(i) + 3;
+      c[i] = rest % radix;
+      rest /= radix;
+    }
     int size = std::accumulate(c.begin(), c.end(), 0);
     if (size % 3 != 1) continue;
     ++congruent;
     if (!check.full(c)) continue;
     ++cores;
     int active = 0;
-    for (int x : c) active += x >= 6;
+    for (int i = 0; i < D; ++i) active += c[i] >= Checker<D>::threshold(i);
     ++histogram[{(size-1)/3, active}];
   }
   Count core_comparisons = check.comparisons;
@@ -175,7 +186,9 @@ template <int D> void experiment() {
   }
   while (!numerator.empty() && numerator.back()==0) numerator.pop_back();
   int degree = static_cast<int>(numerator.size())-1;
-  if (degree > 8*(D/3)-1) throw std::runtime_error("numerator degree bound failed");
+  int cutoff_bound = D == 3 ? 2 : 5 * (D/3) - 4;
+  if (degree > cutoff_bound + D - 1)
+    throw std::runtime_error("numerator degree bound failed");
   Count dense = 0;
   for (const auto& [cell,count] : histogram) if (cell.second==D) dense += count;
   int expected_dense = 1;
@@ -222,8 +235,17 @@ template <int D> void experiment() {
     if (full != core_count(m)) throw std::runtime_error("direct count mismatch");
     direct.push_back(full);
   }
-  std::cout << "{\"order\":" << D/3 << ",\"ranks\":" << D
-            << ",\"core_candidates\":" << candidates << ",\"congruent_candidates\":" << congruent
+  std::cout << "{\"order\":" << D/3 << ",\"ranks\":" << D << ",\"profile\":[";
+  for (int i = 0; i < D; ++i) {
+    if (i) std::cout << ',';
+    std::cout << Checker<D>::threshold(i);
+  }
+  std::cout << "],\"core_caps\":[";
+  for (int i = 0; i < D; ++i) {
+    if (i) std::cout << ',';
+    std::cout << Checker<D>::threshold(i) + 2;
+  }
+  std::cout << "],\"core_candidates\":" << candidates << ",\"congruent_candidates\":" << congruent
             << ",\"full_cores\":" << cores << ",\"dense_cores\":" << dense
             << ",\"core_draw_cross_checks\":" << core_comparisons
             << ",\"total_draw_cross_checks\":" << check.comparisons
@@ -245,7 +267,7 @@ template <int D> void experiment() {
 }
 
 int main() {
-  std::cout << "{\"scope\":\"Finite diagnostic, not a Lean evaluation of core cardinalities\",\"orders\":[";
+  std::cout << "{\"scope\":\"Local-profile cores; finite diagnostic, not a Lean evaluation of core cardinalities\",\"orders\":[";
   experiment<3>();
   std::cout << ',';
   experiment<6>();

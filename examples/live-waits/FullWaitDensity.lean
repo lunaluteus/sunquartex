@@ -156,7 +156,7 @@ theorem fullWait_density_one {n : ℕ} (positive : 0 < n) :
   rw [coefficient, div_self q_nonzero] at limit
   have sampled := limit.comp (tendsto_natCast_atTop_atTop (R := ℝ))
   apply sampled.congr'
-  filter_upwards [eventually_ge_atTop (5 * n)] with m large
+  filter_upwards [eventually_ge_atTop (polynomialBound n)] with m large
   dsimp [P, Q]
   rw [show (m : ℝ) = cast (m : ℚ) by simp [cast], Polynomial.eval_map_apply,
     Polynomial.eval_map_apply, eventualPolynomial_eval n m large,

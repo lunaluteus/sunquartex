@@ -88,27 +88,30 @@ theorem numeratorCountingPolynomial_eval {n : ℕ} (positive : 0 < n) (m : ℕ)
     basis_eval_coeff positive m j ((Polynomial.le_natDegree_of_mem_supp j member).trans large)]
 
 /-- Any polynomial agreeing with all counts on a tail is the eventual counting polynomial. -/
-theorem countingPolynomial_unique {n : ℕ} (positive : 0 < n) (p : Polynomial ℚ) (s : ℕ)
+theorem countingPolynomial_unique {n : ℕ} (p : Polynomial ℚ) (s : ℕ)
     (counts : ∀ m : ℕ, s ≤ m → p.eval (m : ℚ) =
       (Nat.card {c : VirtualHand n // IsFullWait m c} : ℚ)) :
     p = eventualPolynomial n := by
   apply Polynomial.eq_of_infinite_eval_eq
-  have injective : Function.Injective (fun k : ℕ ↦ ((k + s + 5 * n : ℕ) : ℚ)) := by
+  have injective :
+      Function.Injective (fun k : ℕ ↦ ((k + s + polynomialBound n : ℕ) : ℚ)) := by
     intro i j same
-    change ((i + s + 5 * n : ℕ) : ℚ) = ((j + s + 5 * n : ℕ) : ℚ) at same
-    have natural : i + s + 5 * n = j + s + 5 * n := by exact_mod_cast same
+    change ((i + s + polynomialBound n : ℕ) : ℚ) =
+      ((j + s + polynomialBound n : ℕ) : ℚ) at same
+    have natural : i + s + polynomialBound n = j + s + polynomialBound n := by
+      exact_mod_cast same
     omega
   apply (Set.infinite_range_of_injective injective).mono
   rintro x ⟨k, rfl⟩
-  change p.eval ((k + s + 5 * n : ℕ) : ℚ) =
-    (eventualPolynomial n).eval ((k + s + 5 * n : ℕ) : ℚ)
-  rw [counts (k + s + 5 * n) (by omega),
-    eventualPolynomial_eval n (k + s + 5 * n) (by omega)]
+  change p.eval ((k + s + polynomialBound n : ℕ) : ℚ) =
+    (eventualPolynomial n).eval ((k + s + polynomialBound n : ℕ) : ℚ)
+  rw [counts (k + s + polynomialBound n) (by omega),
+    eventualPolynomial_eval n (k + s + polynomialBound n) (by omega)]
 
 /-- Reconstruction from the numerator agrees with the original core-cell polynomial. -/
 theorem numeratorCountingPolynomial_eq {n : ℕ} (positive : 0 < n) :
     numeratorCountingPolynomial n = eventualPolynomial n := by
-  apply countingPolynomial_unique positive _ (5 * n)
+  apply countingPolynomial_unique _ (polynomialBound n)
   intro m large
   apply numeratorCountingPolynomial_eval positive m
   have bound := numerator_degree n
@@ -124,8 +127,8 @@ theorem eventualPolynomial_eval_from_start {n : ℕ} (positive : 0 < n) (m : ℕ
   unfold polynomialStart at large
   omega
 
-/-- The exact-numerator starting index satisfies the established uniform bound. -/
-theorem polynomialStart_le {n : ℕ} (positive : 0 < n) : polynomialStart n ≤ 5 * n := by
+/-- The exact-numerator start is bounded by the local-profile estimate. -/
+theorem polynomialStart_le {n : ℕ} (positive : 0 < n) : polynomialStart n ≤ polynomialBound n := by
   have bound := numerator_degree n
   unfold polynomialStart
   omega
@@ -221,7 +224,7 @@ theorem exists_countingPolynomial_iff {n : ℕ} (positive : 0 < n) (s : ℕ) :
       (Nat.card {c : VirtualHand n // IsFullWait m c} : ℚ)) ↔ polynomialStart n ≤ s := by
   constructor
   · rintro ⟨p, counts⟩
-    rw [countingPolynomial_unique positive p s counts] at counts
+    rw [countingPolynomial_unique p s counts] at counts
     exact (polynomialStart_optimal positive s).mp counts
   · intro large
     exact ⟨eventualPolynomial n, (polynomialStart_optimal positive s).mpr large⟩

@@ -17,6 +17,7 @@ resources:
   - OrderOnePolynomial.lean
   - OrderOneStability.lean
   - CopyCapStability.lean
+  - BoundaryTriplets.lean
   - TripletCore.lean
   - TripletCounting.lean
   - TripletLeading.lean
@@ -32,7 +33,8 @@ abstract: |
   core and freely added triplets at designated coordinates. At each fixed
   order this gives an exact finite sum for every meld-count coefficient,
   a rational ordinary generating series, and a rational-coefficient counting
-  polynomial valid for every meld count at least $5n$. Its degree is exactly
+  polynomial valid from two melds at order one and from $5n-4$ at higher
+  orders. Its degree is exactly
   $3n-1$, with leading coefficient $3^{3n-1}/(3n-1)!$. The structural
   decomposition, counting identities, leading term, and exact starting index
   criterion are checked in Lean.
@@ -54,38 +56,48 @@ full-sided $(n,m)$-wait is a nonnegative multiplicity vector of size $3m+1$
 that wins after every draw. Melds are triplets or three consecutive ranks.
 Fix $n\ge1$, and let $F_n(m)$ count these hands without a physical copy cap.
 
-Adding any triplet preserves full-sidedness. The proof of Proposition 6.8
-in the cited paper also shows that a coordinate of at least nine supplies
-a removable triplet for every winning draw. These two facts yield a
-disjoint parametrization with finite data independent of $m$.
-
-For a nonnegative integer $z$, define
+Adding any triplet preserves full-sidedness. A local version of the
+removable-triplet argument in the proof of Proposition 6.8 of
+@xue-zhong-2026 uses the abundance profile from Proposition 6.2:
 
 $$
-\rho(z)=
-\begin{cases}
-z,&z<6,\\
-6+(z\bmod3),&z\ge6,
+h=\begin{cases}
+(2,4,2),&n=1,\\
+(2,4,6,\ldots,6,4,2),&n\ge2.
 \end{cases}
+$$
+
+A canonical sequence hand uses at most $h_i$ tiles at rank $i$.
+Consequently, whenever $c_i\ge h_i+3$, each winning draw still permits
+removal of a triplet at that rank. The resulting full wait has one fewer
+meld. The sufficient removal thresholds are five at the endpoints,
+seven next to them, and nine in the interior.
+
+For a nonnegative integer $z$ at rank $i$, set $\rho_i(z)=z$ when
+$z<h_i$. For $z\ge h_i$, put
+
+$$
+\rho_i(z)=h_i+((z-h_i)\bmod3).
 $$ {#eq-truncation}
 
-Put $\tau(z)=(z-\rho(z))/3$, a nonnegative integer.
-Then $0\le\rho(z)\le8$ and $z=\rho(z)+3\tau(z)$.
+Put $\tau_i(z)=(z-\rho_i(z))/3$, a nonnegative integer.
+Then $0\le\rho_i(z)\le h_i+2$ and $z=\rho_i(z)+3\tau_i(z)$.
 Apply these functions coordinatewise to a hand.
 
-Let $\mathcal K_n$ be the finite set of full waits whose coordinates lie
-in $\{0,\ldots,8\}$. For $a\in\mathcal K_n$, write
+Let $\mathcal K_n$ be the finite set of full waits satisfying
+$0\le a_i\le h_i+2$ at each rank. For $a\in\mathcal K_n$, write
 
 $$
 \begin{aligned}
 \kappa(a)&=(|a|-1)/3,\\
-S(a)&=\{i:a_i\ge6\},\\
+S(a)&=\{i:a_i\ge h_i\},\\
 r(a)&=|S(a)|.
 \end{aligned}
 $$
 
-Every core has $\kappa(a)<8n$: its size is at most $24n$, while
-$|a|=3\kappa(a)+1$.
+Every core has $\kappa(a)<5$ at order one and $\kappa(a)<8n-4$ at higher
+orders. Its size is at most $\sum_i(h_i+2)$, which is $14$ at order one
+and $24n-12$ for $n\ge2$, while $|a|=3\kappa(a)+1$.
 
 ::: {#thm-core}
 ## Unique core and tails
@@ -106,27 +118,29 @@ m=\kappa(a)+\sum_{i\in S(a)}k_i.
 $$ {#eq-grade}
 :::
 
-The core in this theorem is $a_i=\rho(c_i)$, and its tail is
-$k_i=\tau(c_i)$. For example, $(3,1,12)$ has core $(3,1,6)$ and tail
-$(0,0,2)$: the original five melds split into three core melds and two
+The core in this theorem is $a_i=\rho_i(c_i)$, and its tail is
+$k_i=\tau_i(c_i)$. For example, $(3,1,12)$ has core $(3,1,3)$ and tail
+$(0,0,3)$: the original five melds split into two core melds and three
 added triplets.
 
 ::: {.proof}
 
-Whenever $c_i\ge9$, remove a triplet at $i$. The resulting hand remains
+Whenever $c_i\ge h_i+3$, remove a triplet at $i$. The resulting hand remains
 a full wait and has one fewer meld. Its truncation is unchanged, because
-both $c_i$ and $c_i-3$ are at least six and have the same residue modulo
+both $c_i$ and $c_i-3$ are at least $h_i$ and have the same residue modulo
 three. Repeating terminates at the coordinatewise truncation, a full wait
-bounded by eight. Adding the removed triplets recovers the original hand.
+bounded at rank $i$ by $h_i+2$. Adding the removed triplets recovers the original hand.
 
-For uniqueness, a coordinate $a_i<6$ has zero tail, so $c_i=a_i<6$.
-At a coordinate $6\le a_i\le8$, the residue of $c_i$ modulo three
+For uniqueness, a coordinate $a_i<h_i$ has zero tail, so $c_i=a_i<h_i$.
+At a coordinate $h_i\le a_i\le h_i+2$, the residue of $c_i$ modulo three
 determines $a_i$, and then $k_i=(c_i-a_i)/3$ is determined too.
 Summing the coordinate identity proves @eq-grade.
 :::
 
-The threshold of six makes these cells disjoint. A core may still contain
-removable melds; the truncation is designed for uniqueness of the cells.
+The local three-tile bands make the cells disjoint. Every minimal full
+wait lies in this profile box, giving the upper bound
+$m<8n-4$ on its meld count when $n\ge2$. A truncation core may still
+contain removable melds; the decomposition provides unique cells.
 
 ## An exact finite counting formula {#sec-formula}
 
@@ -158,8 +172,8 @@ cores never count the same hand. Cores with $r(a)=0$ contribute a single
 hand at $m=\kappa(a)$.
 
 This is a finite formula at every fixed $n$. Evaluating it still requires
-finding the bounded full cores. The displayed box contains $9^{3n}$
-candidates, so direct evaluation can be large even though that box no
+finding the bounded full cores. The box contains $175$ candidates at order one and
+$5^2\cdot7^2\cdot9^{3n-4}$ at higher orders, so direct evaluation can be large even though that box no
 longer grows with $m$.
 
 ## Rational generating series {#sec-series}
@@ -192,6 +206,15 @@ formal power-series identities, with no analytic convergence condition.
 
 ## Eventual polynomial behavior {#sec-polynomial}
 
+The local-profile estimate gives the sufficient starting bound
+
+$$
+B_n=\begin{cases}
+2,&n=1,\\
+5n-4,&n\ge2.
+\end{cases}
+$$
+
 ::: {#thm-polynomial}
 ## A uniform polynomial range
 
@@ -199,7 +222,7 @@ There is an explicit polynomial $H_n(x)\in\mathbb Q[x]$ of degree at most
 $3n-1$ such that
 
 $$
-F_n(m)=H_n(m)\qquad(m\ge5n).
+F_n(m)=H_n(m)\qquad(m\ge B_n).
 $$
 :::
 
@@ -210,13 +233,14 @@ H_n(x)=\sum_{\substack{a\in\mathcal K_n\\r(a)>0}}
 \binom{x-\kappa(a)+r(a)-1}{r(a)-1}.
 $$
 
-Each inactive core coordinate is at most five and each active coordinate
-is at most eight. Since $|a|=3\kappa(a)+1$, this yields
+An inactive coordinate is at most $h_i-1$ and an active coordinate is
+at most $h_i+2$. Write $C_n=\sum_i(h_i-1)$, which is $5$ at order one
+and $15n-12$ at higher orders. Thus
 
 $$
 \begin{aligned}
-|a|&\le15n+3r(a),\\
-\kappa(a)+1&\le5n+r(a).
+|a|&\le C_n+3r(a),\\
+\kappa(a)+1&\le B_n+r(a).
 \end{aligned}
 $$ {#eq-active-grade}
 
@@ -224,14 +248,14 @@ For $r(a)>0$, the binomial polynomial agrees with the cell count at every
 integer $m\ge\kappa(a)-r(a)+1$. At $m\ge\kappa(a)$ this is the usual
 weak-composition formula. At the preceding $r(a)-1$ integers it vanishes,
 matching the absent core. For $r(a)=0$, the cell contributes nothing once
-$m\ge5n$, because @eq-active-grade gives $\kappa(a)\le5n-1$.
-Thus $m\ge5n$ suffices for every cell. Each nonzero row polynomial has
+$m\ge B_n$, because @eq-active-grade gives $\kappa(a)<B_n$.
+Thus $m\ge B_n$ suffices for every cell. Each nonzero row polynomial has
 degree $r(a)-1\le3n-1$, proving @thm-polynomial. This cutoff is sufficient;
 smaller starting points can result after cancellations.
 
-The same weighted bound also controls the numerator in @eq-numerator.
-Each summand has degree at most $\kappa(a)+3n-r(a)\le8n-1$, so
-$\deg P_n\le8n-1$.
+The same weighted bound controls the numerator in @eq-numerator:
+each summand has degree at most $\kappa(a)+3n-r(a)\le B_n+3n-1$.
+Hence $\deg P_1\le4$, and $\deg P_n\le8n-5$ for $n\ge2$.
 
 For three ranks, the [earlier exact formula](three-ranks.html) simplifies to
 
@@ -261,12 +285,12 @@ P_n(1)=3^{3n-1}>0.
 $$
 :::
 
-A fully active core has $r(a)=3n$, so every coordinate lies in
-$\{6,7,8\}$. Proposition 6.2 of @xue-zhong-2026 says that a hand above
-the abundance threshold is full-sided whenever its size is one modulo
-three. That threshold is at most six in every coordinate. Thus the fully
-active cores are exactly the vectors in $\{6,7,8\}^{3n}$ whose coordinate
-sum is one modulo three.
+A fully active core has $r(a)=3n$, so every coordinate lies in its local
+band $h_i\le a_i\le h_i+2$. Proposition 6.2 of @xue-zhong-2026 makes
+all such hands full-sided whenever their size is one modulo three.
+Each three-tile band contains one representative of every residue class.
+Thus the fully active cores are exactly the vectors in these bands whose
+coordinate sum is one modulo three.
 
 Choose residues at any $3n-1$ ranks freely. The sum condition determines
 the last residue, so there are exactly $3^{3n-1}$ such cores. Each
@@ -324,7 +348,7 @@ $$
 Any polynomial agreeing with the count on a tail is unique, since two
 such polynomials coincide at infinitely many rational points. This proves
 both the sharp boundary and the assertion about every possible counting
-polynomial in @thm-start. The bound $R_n\le8n-1$ recovers $s_n\le5n$;
+polynomial in @thm-start. The bound $R_n\le B_n+3n-1$ recovers $s_n\le B_n$;
 a numerical improvement at a particular order reduces to determining the
 actual numerator degree.
 
@@ -370,9 +394,9 @@ statement can coexist with a substantial deficit at small meld counts.
 
 ## A six-rank diagnostic {#sec-six-ranks}
 
-A separate ordinary-program computation explores how loose the uniform
-$5n$ cutoff is. For six ranks it checks all $9^6=531441$ core candidates,
-finds 52213 full cores, and gives the candidate numerator
+A separate ordinary computation explores how close $B_n$ is to the exact
+start. For six ranks it checks the $5^2\cdot7^2\cdot9^2=99225$ candidates in the
+profile box, finds 8114 full cores, and gives the candidate numerator
 
 $$
 \begin{aligned}
@@ -383,16 +407,18 @@ P_2(t)={}&8t^3+68t^4+141t^5\\
 $$
 
 This has $P_2(1)=243$, agreeing with @thm-leading. If the computed numerator
-is confirmed, @thm-start gives the exact start $10-6+1=5$. @tbl-six-ranks compares that polynomial with direct
-counts of all uncapped hands of each fixed size.
+is confirmed, @thm-start gives the exact start $10-6+1=5$.
+@tbl-six-ranks compares that polynomial with direct counts of all uncapped hands of each fixed size.
 
 The direct count at $m=4$ differs from the polynomial by two, so the
 computed range cannot start earlier than five. The general Lean theorem
-provides the sufficient range $m\ge10$ at this order.
+provides the sufficient range $m\ge6$ at this order. It also gives
+$\deg P_2\le11$, so an exact start of five reduces to proving that
+the coefficient of $t^{11}$ is zero and that of $t^{10}$ is nonzero.
 
 The [C++ source](six-rank-cores.cpp) compares a triplet-greedy scan,
 normalized sequence templates, and literal recursive meld decomposition
-on every draw case. For six ranks these are 1062882 core draw cases and
+on every draw case. For six ranks these are 198450 core draw cases and
 1791504 further draw cases from the entire fixed-size sample spaces for
 $m=0,\ldots,8$. The core formula and generating-series coefficients are
 also compared through $m=40$. The three-rank run recovers the previously
@@ -423,7 +449,9 @@ python3 examples/live-waits/six-rank-summary.py /tmp/six-rank-cores.json
 
 ## Checked Lean sources {#sec-lean}
 
-[TripletCore.lean](TripletCore.lean) proves truncation, reconstruction,
+[BoundaryTriplets.lean](BoundaryTriplets.lean) proves local triplet removal,
+the profile cap for minimal full waits, and the improved minimal meld-count
+bound. [TripletCore.lean](TripletCore.lean) proves truncation, reconstruction,
 uniqueness, preservation of full-sidedness, the exact meld-count split,
 and the equivalence with graded weak compositions.
 
@@ -450,8 +478,8 @@ It proves the criterion symbolically, using the actual numerator's degree.
 
 These files use Lean 4.35.0 against the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
-The common [checker](check-lean.py) compiles fourteen modules in a fresh
-temporary directory with strict linters and audits eighty-four declarations
+The common [checker](check-lean.py) compiles fifteen modules in a fresh
+temporary directory with strict linters and audits ninety-one declarations
 against only `propext`, `Classical.choice`, and `Quot.sound`:
 
 ```sh
@@ -459,7 +487,7 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-A separate small diagnostic checks the three-rank core box against the known
+The diagnostic above also checks the three-rank profile box against the known
 order-one formula. The general proofs work with symbolic finite types and
 require no enumeration of higher-order core tables.
 

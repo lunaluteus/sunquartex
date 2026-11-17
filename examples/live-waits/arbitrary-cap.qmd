@@ -16,6 +16,7 @@ resources:
   - OrderOnePolynomial.lean
   - OrderOneStability.lean
   - CopyCapStability.lean
+  - BoundaryTriplets.lean
   - TripletCore.lean
   - TripletCounting.lean
   - TripletLeading.lean
@@ -201,8 +202,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-The [checker](check-lean.py) compiles the fourteen companion modules with strict
-linters in a temporary directory, then checks that the eighty-four audited
+The [checker](check-lean.py) compiles the fifteen companion modules with strict
+linters in a temporary directory, then checks that the ninety-one audited
 declarations use only `propext`, `Classical.choice`, and `Quot.sound`.
 Rendering the document displays the mathematics; this command separately
 checks the proofs. The construction uses no enumeration of candidate hands.

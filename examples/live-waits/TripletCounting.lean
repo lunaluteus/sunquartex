@@ -13,7 +13,8 @@ import Mathlib.RingTheory.Polynomial.HilbertPoly
 The core decomposition gives an exact finite sum of multichoose numbers, a
 rational generating series with denominator `(1-X)^(3*n)`, and an explicit
 rational-coefficient counting polynomial valid at every meld count at least
-`5*n`. Its degree is at most `3*n-1`; this cutoff is sufficient, not asserted
+`polynomialBound n` (two at order one, `5*n-4` at higher orders).
+Its degree is at most `3*n-1`; this cutoff is sufficient, not asserted
 optimal. Mathlib supplies stars and bars through `Sym.equivNatSumOfFintype`
 and the polynomial evaluation through `Polynomial.preHilbertPoly`.
 -/
@@ -64,17 +65,32 @@ theorem full_card_formula (n m : ℕ) :
   intro a _
   exact row_card a m
 
-/-- Weighting the active ranks sharpens the grade bound for each core cell. -/
+/-- Uniform starting bound supplied by the local threshold profile. -/
+def polynomialBound (n : ℕ) : ℕ := if n = 1 then 2 else 5 * n - 4
+
+/-- The profile improves the previous five-times-order sufficient bound. -/
+theorem polynomialBound_le_five (n : ℕ) : polynomialBound n ≤ 5 * n := by
+  unfold polynomialBound
+  split_ifs with one
+  · subst n
+    norm_num
+  · omega
+
+/-- Weighting active ranks by the local profile sharpens each core's grade bound. -/
 theorem core_grade_active_bound {n : ℕ} (a : Cores n) :
-    grade a.val + 1 ≤ 5 * n + Nat.card (Active a) := by
+    grade a.val + 1 ≤ polynomialBound n + Nat.card (Active a) := by
   classical
-  have active_sum : (∑ i : Rank n, if 6 ≤ a.val i then (3 : ℤ) else 0) =
+  have active_sum : (∑ i : Rank n, if abundanceThreshold i ≤ a.val i then (3 : ℤ) else 0) =
       (Nat.card (Active a) : ℤ) * 3 := by
     rw [← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul,
       ← Fintype.card_subtype, ← Nat.card_eq_fintype_card]
-  have upper : size a.val ≤ ((3 * n : ℕ) : ℤ) * 5 + (Nat.card (Active a) : ℤ) * 3 := by
+  have upper : size a.val ≤
+      size (abundanceThreshold : VirtualHand n) - ((3 * n : ℕ) : ℤ) +
+      (Nat.card (Active a) : ℤ) * 3 := by
     calc
-      _ ≤ ∑ i : Rank n, (5 + if 6 ≤ a.val i then (3 : ℤ) else 0) := by
+      _ ≤ ∑ i : Rank n,
+          (abundanceThreshold i - 1 +
+            if abundanceThreshold i ≤ a.val i then (3 : ℤ) else 0) := by
         change (∑ i, a.val i) ≤ _
         apply Finset.sum_le_sum
         intro i _
@@ -83,10 +99,25 @@ theorem core_grade_active_bound {n : ℕ} (a : Cores n) :
           omega
         · omega
       _ = _ := by
-        rw [Finset.sum_add_distrib, active_sum]
-        simp [Rank]
-  rw [(full_grade a.property.2).2.1] at upper
-  omega
+        rw [Finset.sum_add_distrib, active_sum, Finset.sum_sub_distrib]
+        simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+          nsmul_eq_mul, mul_one]
+        rfl
+  have count := (full_grade a.property.2).2.1
+  have positive : 0 < n := by
+    by_contra empty
+    have zero : n = 0 := by omega
+    subst n
+    simp [size, Rank] at count
+    omega
+  rw [count, abundanceThreshold_size positive] at upper
+  unfold polynomialBound
+  split_ifs with one
+  · subst n
+    norm_num at upper
+    rw [Nat.card_eq_fintype_card]
+    omega
+  · omega
 
 /-- Polynomial contribution of one core to the eventual count. -/
 noncomputable def rowPolynomial {n : ℕ} (a : Cores n) : Polynomial ℚ :=
@@ -98,7 +129,7 @@ noncomputable def eventualPolynomial (n : ℕ) : Polynomial ℚ :=
   ∑ a : Cores n, rowPolynomial a
 
 private lemma rowPolynomial_eval {n : ℕ} (a : Cores n) (m : ℕ)
-    (large : 5 * n ≤ m) :
+    (large : polynomialBound n ≤ m) :
     (rowPolynomial a).eval (m : ℚ) =
       ((if grade a.val ≤ m then
         Nat.multichoose (Nat.card (Active a)) (m - grade a.val) else 0 : ℕ) : ℚ) := by
@@ -123,8 +154,8 @@ private lemma rowPolynomial_eval {n : ℕ} (a : Cores n) (m : ℕ)
           (Nat.card (Active a) - 1) + (m - grade a.val)))
     · rw [ite_eq_right permitted, Nat.choose_eq_zero_of_lt (by omega)]
 
-/-- At every order, the full-wait count is polynomial once the meld count reaches `5*n`. -/
-theorem eventualPolynomial_eval (n m : ℕ) (large : 5 * n ≤ m) :
+/-- The count is polynomial from the starting bound supplied by the local profile. -/
+theorem eventualPolynomial_eval (n m : ℕ) (large : polynomialBound n ≤ m) :
     (eventualPolynomial n).eval (m : ℚ) =
       (Nat.card {c : VirtualHand n // IsFullWait m c} : ℚ) := by
   rw [eventualPolynomial, Polynomial.eval_finsetSum, full_card_formula]
@@ -180,7 +211,7 @@ noncomputable def numerator (n : ℕ) : Polynomial ℚ :=
     (1 - Polynomial.X) ^ (3 * n - Nat.card (Active a))
 
 /-- The active-rank correction also bounds the rational numerator's degree. -/
-theorem numerator_degree (n : ℕ) : (numerator n).natDegree ≤ 8 * n - 1 := by
+theorem numerator_degree (n : ℕ) : (numerator n).natDegree ≤ polynomialBound n + 3 * n - 1 := by
   apply Polynomial.natDegree_sum_le_of_forall_le
   intro a _
   have bound := core_grade_active_bound a

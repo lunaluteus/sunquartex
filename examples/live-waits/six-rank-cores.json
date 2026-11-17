@@ -1,15 +1,25 @@
 {
-  "scope": "Finite diagnostic, not a Lean evaluation of core cardinalities",
+  "scope": "Local-profile cores; finite diagnostic, not a Lean evaluation of core cardinalities",
   "orders": [
     {
       "order": 1,
       "ranks": 3,
-      "core_candidates": 729,
-      "congruent_candidates": 243,
-      "full_cores": 126,
+      "profile": [
+        2,
+        4,
+        2
+      ],
+      "core_caps": [
+        4,
+        6,
+        4
+      ],
+      "core_candidates": 175,
+      "congruent_candidates": 59,
+      "full_cores": 20,
       "dense_cores": 9,
-      "core_draw_cross_checks": 729,
-      "total_draw_cross_checks": 4374,
+      "core_draw_cross_checks": 177,
+      "total_draw_cross_checks": 3822,
       "recursive_memo_states": 1088,
       "numerator_degree": 3,
       "numerator": [
@@ -21,58 +31,28 @@
       "histogram": [
         {
           "grade": 2,
-          "active": 0,
-          "count": 6
+          "active": 1,
+          "count": 2
+        },
+        {
+          "grade": 2,
+          "active": 2,
+          "count": 4
         },
         {
           "grade": 3,
-          "active": 0,
-          "count": 12
+          "active": 2,
+          "count": 5
         },
         {
           "grade": 3,
-          "active": 1,
-          "count": 9
-        },
-        {
-          "grade": 4,
-          "active": 0,
-          "count": 6
-        },
-        {
-          "grade": 4,
-          "active": 1,
-          "count": 27
-        },
-        {
-          "grade": 4,
-          "active": 2,
-          "count": 3
-        },
-        {
-          "grade": 5,
-          "active": 1,
-          "count": 18
-        },
-        {
-          "grade": 5,
-          "active": 2,
-          "count": 18
-        },
-        {
-          "grade": 6,
-          "active": 2,
-          "count": 18
-        },
-        {
-          "grade": 6,
-          "active": 3,
-          "count": 3
-        },
-        {
-          "grade": 7,
           "active": 3,
           "count": 6
+        },
+        {
+          "grade": 4,
+          "active": 3,
+          "count": 3
         }
       ],
       "counts_m_0_to_40": [
@@ -133,13 +113,29 @@
     {
       "order": 2,
       "ranks": 6,
-      "core_candidates": 531441,
-      "congruent_candidates": 177147,
-      "full_cores": 52213,
+      "profile": [
+        2,
+        4,
+        6,
+        6,
+        4,
+        2
+      ],
+      "core_caps": [
+        4,
+        6,
+        8,
+        8,
+        6,
+        4
+      ],
+      "core_candidates": 99225,
+      "congruent_candidates": 33075,
+      "full_cores": 8114,
       "dense_cores": 243,
-      "core_draw_cross_checks": 1062882,
-      "total_draw_cross_checks": 2854386,
-      "recursive_memo_states": 391500,
+      "core_draw_cross_checks": 198450,
+      "total_draw_cross_checks": 1989954,
+      "recursive_memo_states": 248741,
       "numerator_degree": 10,
       "numerator": [
         0,
@@ -158,215 +154,150 @@
         {
           "grade": 3,
           "active": 0,
-          "count": 8
+          "count": 5
+        },
+        {
+          "grade": 3,
+          "active": 1,
+          "count": 2
+        },
+        {
+          "grade": 3,
+          "active": 2,
+          "count": 1
         },
         {
           "grade": 4,
           "active": 0,
-          "count": 94
+          "count": 18
         },
         {
           "grade": 4,
           "active": 1,
-          "count": 22
+          "count": 66
         },
         {
-          "grade": 5,
-          "active": 0,
-          "count": 350
-        },
-        {
-          "grade": 5,
-          "active": 1,
-          "count": 328
-        },
-        {
-          "grade": 5,
+          "grade": 4,
           "active": 2,
-          "count": 17
+          "count": 26
         },
         {
-          "grade": 6,
-          "active": 0,
-          "count": 596
-        },
-        {
-          "grade": 6,
-          "active": 1,
-          "count": 1430
-        },
-        {
-          "grade": 6,
-          "active": 2,
-          "count": 378
-        },
-        {
-          "grade": 6,
+          "grade": 4,
           "active": 3,
           "count": 2
         },
         {
-          "grade": 7,
+          "grade": 5,
           "active": 0,
-          "count": 496
+          "count": 6
+        },
+        {
+          "grade": 5,
+          "active": 1,
+          "count": 180
+        },
+        {
+          "grade": 5,
+          "active": 2,
+          "count": 333
+        },
+        {
+          "grade": 5,
+          "active": 3,
+          "count": 68
+        },
+        {
+          "grade": 5,
+          "active": 4,
+          "count": 1
+        },
+        {
+          "grade": 6,
+          "active": 1,
+          "count": 52
+        },
+        {
+          "grade": 6,
+          "active": 2,
+          "count": 712
+        },
+        {
+          "grade": 6,
+          "active": 3,
+          "count": 748
+        },
+        {
+          "grade": 6,
+          "active": 4,
+          "count": 62
         },
         {
           "grade": 7,
-          "active": 1,
-          "count": 2780
-        },
-        {
-          "grade": 7,
           "active": 2,
-          "count": 2143
+          "count": 178
         },
         {
           "grade": 7,
           "active": 3,
-          "count": 156
+          "count": 1380
         },
         {
-          "grade": 8,
-          "active": 0,
-          "count": 184
-        },
-        {
-          "grade": 8,
-          "active": 1,
-          "count": 2592
-        },
-        {
-          "grade": 8,
-          "active": 2,
-          "count": 5060
-        },
-        {
-          "grade": 8,
-          "active": 3,
-          "count": 1402
-        },
-        {
-          "grade": 8,
+          "grade": 7,
           "active": 4,
-          "count": 12
+          "count": 822
         },
         {
-          "grade": 9,
-          "active": 0,
-          "count": 21
-        },
-        {
-          "grade": 9,
-          "active": 1,
-          "count": 1054
-        },
-        {
-          "grade": 9,
-          "active": 2,
-          "count": 5490
-        },
-        {
-          "grade": 9,
-          "active": 3,
-          "count": 4454
-        },
-        {
-          "grade": 9,
-          "active": 4,
-          "count": 355
-        },
-        {
-          "grade": 10,
-          "active": 1,
-          "count": 126
-        },
-        {
-          "grade": 10,
-          "active": 2,
-          "count": 2502
-        },
-        {
-          "grade": 10,
-          "active": 3,
-          "count": 5966
-        },
-        {
-          "grade": 10,
-          "active": 4,
-          "count": 1876
-        },
-        {
-          "grade": 10,
+          "grade": 7,
           "active": 5,
-          "count": 16
+          "count": 26
         },
         {
-          "grade": 11,
-          "active": 2,
-          "count": 315
-        },
-        {
-          "grade": 11,
+          "grade": 8,
           "active": 3,
-          "count": 3148
+          "count": 306
         },
         {
-          "grade": 11,
+          "grade": 8,
           "active": 4,
-          "count": 3440
+          "count": 1374
         },
         {
-          "grade": 11,
+          "grade": 8,
           "active": 5,
-          "count": 304
+          "count": 436
         },
         {
-          "grade": 12,
-          "active": 3,
-          "count": 420
-        },
-        {
-          "grade": 12,
-          "active": 4,
-          "count": 2212
-        },
-        {
-          "grade": 12,
-          "active": 5,
-          "count": 958
-        },
-        {
-          "grade": 12,
+          "grade": 8,
           "active": 6,
           "count": 6
         },
         {
-          "grade": 13,
+          "grade": 9,
           "active": 4,
-          "count": 315
+          "count": 275
         },
         {
-          "grade": 13,
+          "grade": 9,
           "active": 5,
-          "count": 822
+          "count": 670
         },
         {
-          "grade": 13,
+          "grade": 9,
           "active": 6,
           "count": 90
         },
         {
-          "grade": 14,
+          "grade": 10,
           "active": 5,
-          "count": 126
+          "count": 122
         },
         {
-          "grade": 14,
+          "grade": 10,
           "active": 6,
           "count": 126
         },
         {
-          "grade": 15,
+          "grade": 11,
           "active": 6,
           "count": 21
         }
