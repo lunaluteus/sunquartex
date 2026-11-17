@@ -13,7 +13,7 @@ SOURCES = ('Capacity.lean', 'LiveMaximum.lean', 'CopyBound.lean', 'CapacitySpect
            'OrderOneDuality.lean', 'OrderOneBoxes.lean', 'OrderOnePolynomial.lean',
            'OrderOneStability.lean', 'CopyCapStability.lean',
            'BoundaryTriplets.lean', 'TripletCore.lean', 'TripletCounting.lean', 'TripletLeading.lean',
-           'FullWaitDensity.lean', 'PolynomialStart.lean')
+           'FullWaitDensity.lean', 'PolynomialStart.lean', 'TopLayer.lean')
 AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     f'Mahjong.VirtualHand.LiveSpectrum.{name}' for name in
     ('layer_sequential', 'add_layer', 'exists_live_iff', 'maximum', 'extremal_apply', 'extremal_live')
@@ -65,6 +65,12 @@ AUDITED += tuple(f'Mahjong.VirtualHand.{name}' for name in
                   'IsMinimalFullWait.meldCount_lt_boundary'))
 AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
                  ('CoreBounded.bounded_eight', 'polynomialBound_le_five'))
+AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
+                 ('bandTop_le', 'totalDefect_add_size', 'totalDefect_grade',
+                  'top_cell_iff_defect_two', 'cell_top_coeff', 'numerator_top_coeff',
+                  'numerator_degree_improves_iff', 'eventualPolynomial_eval_of_top_cancel',
+                  'defect_pattern_card', 'six_rank_defect_pattern_card', 'top_core_reconstruct',
+                  'topEncode_injective', 'six_rank_top_card_le'))
 ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
 ENTRY = re.compile(
     r"'([^\n]*?)' (?:depends on axioms:\s*\[([^]]*)\]|does not depend on any axioms)"
@@ -112,7 +118,7 @@ def main():
                         'import OrderOneBoxes\nimport OrderOnePolynomial\n'
                         'import OrderOneStability\nimport CopyCapStability\n'
                         'import BoundaryTriplets\nimport TripletCore\nimport TripletCounting\nimport TripletLeading\n'
-                        'import FullWaitDensity\nimport PolynomialStart\n\n' + ''.join(
+                        'import FullWaitDensity\nimport PolynomialStart\nimport TopLayer\n\n' + ''.join(
             f'#print axioms {name}\n' for name in AUDITED
         ))
         # The audit deliberately uses #print; apply the strict source linters

@@ -23,11 +23,14 @@ resources:
   - TripletLeading.lean
   - FullWaitDensity.lean
   - PolynomialStart.lean
+  - TopLayer.lean
   - check-lean.py
   - six-rank-cores.cpp
   - six-rank-cores.json
   - six-rank-summary.py
   - six-rank-summary.json
+  - top-layer-check.py
+  - top-layer-check.json
 abstract: |
   A full-sided Mahjong wait has a unique decomposition into a bounded full
   core and freely added triplets at designated coordinates. At each fixed
@@ -416,6 +419,34 @@ provides the sufficient range $m\ge6$ at this order. It also gives
 $\deg P_2\le11$, so an exact start of five reduces to proving that
 the coefficient of $t^{11}$ is zero and that of $t^{10}$ is nonzero.
 
+The [top-layer reduction](TopLayer.lean) isolates the highest allowed
+coefficient without counting the entire core box. For each core define the
+nonnegative coordinate defects
+
+$$
+\delta_i=h_i-1+3\mathbf1_{i\in I(a)}-a_i.
+$$
+
+At every $n\ge2$, its cell reaches degree $8n-5$ exactly when
+$\sum_i\delta_i=2$. Consequently
+
+$$
+[t^{8n-5}]P_n(t)=
+\sum_{a:\,\sum_i\delta_i=2}(-1)^{3n-r(a)}.
+$$
+
+These statements, reconstruction from the activity mask and defects, and the
+weak-composition count $\binom{3n+1}{2}$ of possible defect patterns are
+proved in Lean. At six ranks there are just 21 patterns and 64 masks per
+pattern; an injective encoding proves that at most 1344 cores can contribute. The [small diagnostic](top-layer-check.py) checks both a greedy scan
+and literal recursive meld decomposition on these 1344 assignments. For
+every pattern it finds a coordinate whose activity can be toggled while
+preserving full-sidedness, so the two signs cancel. Its
+[output](top-layer-check.json) records the coordinate and full masks for
+each pattern. This toggle invariance remains computational; the Lean
+reduction does not yet certify the cancellation or improve the proved
+six-rank starting bound of six.
+
 The [C++ source](six-rank-cores.cpp) compares a triplet-greedy scan,
 normalized sequence templates, and literal recursive meld decomposition
 on every draw case. For six ranks these are 198450 core draw cases and
@@ -445,6 +476,7 @@ g++ -std=c++20 -O2 examples/live-waits/six-rank-cores.cpp \
   -o /tmp/six-rank-cores
 /tmp/six-rank-cores > /tmp/six-rank-cores.json
 python3 examples/live-waits/six-rank-summary.py /tmp/six-rank-cores.json
+python3 examples/live-waits/top-layer-check.py
 ```
 
 ## Checked Lean sources {#sec-lean}
@@ -471,6 +503,10 @@ count in @eq-ambient, positivity and containment, the ambient counting
 polynomial, and the real limit in @thm-density. The last step uses
 Mathlib's limit theorem for quotients of polynomials of equal degree.
 
+[TopLayer.lean](TopLayer.lean) proves the defect-two coefficient reduction,
+the conditional degree and range improvement, reconstruction from masks and
+defects, and the count of 21 six-rank defect patterns.
+
 [PolynomialStart.lean](PolynomialStart.lean) proves reconstruction from the
 numerator, uniqueness of a polynomial counting on a tail, the exact boundary
 error, and both directions of the optimal-range criterion in @thm-start.
@@ -478,8 +514,8 @@ It proves the criterion symbolically, using the actual numerator's degree.
 
 These files use Lean 4.35.0 against the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
-The common [checker](check-lean.py) compiles fifteen modules in a fresh
-temporary directory with strict linters and audits ninety-one declarations
+The common [checker](check-lean.py) compiles sixteen modules in a fresh
+temporary directory with strict linters and audits 104 declarations
 against only `propext`, `Classical.choice`, and `Quot.sound`:
 
 ```sh
