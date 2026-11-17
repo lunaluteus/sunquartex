@@ -21,6 +21,7 @@ resources:
   - TripletCounting.lean
   - TripletLeading.lean
   - FullWaitDensity.lean
+  - PolynomialStart.lean
   - check-lean.py
   - six-rank-cores.cpp
   - six-rank-cores.json
@@ -33,7 +34,8 @@ abstract: |
   a rational ordinary generating series, and a rational-coefficient counting
   polynomial valid for every meld count at least $5n$. Its degree is exactly
   $3n-1$, with leading coefficient $3^{3n-1}/(3n-1)!$. The structural
-  decomposition, counting identities, and leading term are checked in Lean.
+  decomposition, counting identities, leading term, and exact starting index
+  criterion are checked in Lean.
   The resulting density of full waits among uniformly sampled uncapped
   multiplicity vectors tends to one as the meld count increases.
 format:
@@ -278,6 +280,54 @@ for every other core. The same count proves the numerator identity in
 @thm-leading. In particular $1-t$ does not divide $P_n(t)$, so the
 common denominator $(1-t)^{3n}$ cannot be reduced by cancellation.
 
+## The exact polynomial starting index {#sec-start}
+
+Let $R_n=\deg P_n$ for the actual numerator in @eq-numerator, after all
+coefficient cancellations. The numerator is nonzero by @thm-leading. Put
+
+$$
+s_n=\max\{0,R_n-3n+1\}.
+$$
+
+::: {#thm-start}
+## Exact starting index
+
+The counting polynomial satisfies
+
+$$
+F_n(m)=H_n(m)\qquad(m\ge s_n).
+$$
+
+If $s_n>0$, it fails at $m=s_n-1$. More generally, a polynomial in $\mathbb Q[x]$ can give
+all counts from a natural index $u$ onward if and only if $s_n\le u$.
+:::
+
+Write $P_n(t)=\sum_{j=0}^{R_n}p_jt^j$. Expanding the common denominator
+gives an alternative expression for the same eventual polynomial:
+
+$$
+H_n(x)=\sum_{j=0}^{R_n}p_j
+\binom{x-j+3n-1}{3n-1}.
+$$
+
+For $m\ge s_n$, every basis polynomial agrees with the corresponding
+series coefficient: terms with $j>m$ are in their integer zero range.
+If $R_n\ge3n$, at $m=R_n-3n$ only the final term can disagree, and
+
+$$
+\begin{aligned}
+&H_n(R_n-3n)-F_n(R_n-3n)\\
+&\qquad=(-1)^{3n-1}p_{R_n}\ne0.
+\end{aligned}
+$$
+
+Any polynomial agreeing with the count on a tail is unique, since two
+such polynomials coincide at infinitely many rational points. This proves
+both the sharp boundary and the assertion about every possible counting
+polynomial in @thm-start. The bound $R_n\le8n-1$ recovers $s_n\le5n$;
+a numerical improvement at a particular order reduces to determining the
+actual numerator degree.
+
 ## Density among uncapped hands {#sec-density}
 
 Let $A_n(m)$ be the number of all nonnegative multiplicity vectors on the
@@ -332,10 +382,8 @@ P_2(t)={}&8t^3+68t^4+141t^5\\
 \end{aligned}
 $$
 
-This has $P_2(1)=243$, agreeing with @thm-leading. The table predicts an
-eventual polynomial range beginning at $m=5$: for a denominator
-$(1-t)^6$, a numerator of degree ten yields the binomial polynomial from
-$10-6+1=5$ onward. @tbl-six-ranks compares that polynomial with direct
+This has $P_2(1)=243$, agreeing with @thm-leading. If the computed numerator
+is confirmed, @thm-start gives the exact start $10-6+1=5$. @tbl-six-ranks compares that polynomial with direct
 counts of all uncapped hands of each fixed size.
 
 The direct count at $m=4$ differs from the polynomial by two, so the
@@ -395,10 +443,15 @@ count in @eq-ambient, positivity and containment, the ambient counting
 polynomial, and the real limit in @thm-density. The last step uses
 Mathlib's limit theorem for quotients of polynomials of equal degree.
 
+[PolynomialStart.lean](PolynomialStart.lean) proves reconstruction from the
+numerator, uniqueness of a polynomial counting on a tail, the exact boundary
+error, and both directions of the optimal-range criterion in @thm-start.
+It proves the criterion symbolically, using the actual numerator's degree.
+
 These files use Lean 4.35.0 against the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
-The common [checker](check-lean.py) compiles thirteen modules in a fresh
-temporary directory with strict linters and audits seventy-five declarations
+The common [checker](check-lean.py) compiles fourteen modules in a fresh
+temporary directory with strict linters and audits eighty-four declarations
 against only `propext`, `Classical.choice`, and `Quot.sound`:
 
 ```sh

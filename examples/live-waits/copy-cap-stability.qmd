@@ -21,6 +21,7 @@ resources:
   - TripletCounting.lean
   - TripletLeading.lean
   - FullWaitDensity.lean
+  - PolynomialStart.lean
   - check-lean.py
 abstract: |
   Every full-sided Mahjong wait on $3n$ ranks with $m$ melds has each
@@ -206,8 +207,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-The [checker](check-lean.py) compiles thirteen source modules in a fresh temporary
-directory with strict linters, then audits seventy-five declarations. Only
+The [checker](check-lean.py) compiles fourteen source modules in a fresh temporary
+directory with strict linters, then audits eighty-four declarations. Only
 `propext`, `Classical.choice`, and `Quot.sound` are permitted. Rendering the
 document is separate from checking the proofs. These notes remain an
 independent experiment in this fork.

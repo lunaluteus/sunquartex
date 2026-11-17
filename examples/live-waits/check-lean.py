@@ -13,7 +13,7 @@ SOURCES = ('Capacity.lean', 'LiveMaximum.lean', 'CopyBound.lean', 'CapacitySpect
            'OrderOneDuality.lean', 'OrderOneBoxes.lean', 'OrderOnePolynomial.lean',
            'OrderOneStability.lean', 'CopyCapStability.lean',
            'TripletCore.lean', 'TripletCounting.lean', 'TripletLeading.lean',
-           'FullWaitDensity.lean')
+           'FullWaitDensity.lean', 'PolynomialStart.lean')
 AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     f'Mahjong.VirtualHand.LiveSpectrum.{name}' for name in
     ('layer_sequential', 'add_layer', 'exists_live_iff', 'maximum', 'extremal_apply', 'extremal_live')
@@ -53,6 +53,12 @@ AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
                   'allHands_card_pos', 'fullWait_card_le_all', 'allPolynomial_eval',
                   'allPolynomial_natDegree', 'allPolynomial_leadingCoeff',
                   'fullWait_density_one'))
+AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
+                 ('numeratorCountingPolynomial_eval', 'countingPolynomial_unique',
+                  'numeratorCountingPolynomial_eq', 'eventualPolynomial_eval_from_start',
+                  'polynomialStart_le', 'polynomial_boundary_error',
+                  'eventualPolynomial_ne_before_start', 'polynomialStart_optimal',
+                  'exists_countingPolynomial_iff'))
 ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
 ENTRY = re.compile(
     r"'([^\n]*?)' (?:depends on axioms:\s*\[([^]]*)\]|does not depend on any axioms)"
@@ -100,7 +106,7 @@ def main():
                         'import OrderOneBoxes\nimport OrderOnePolynomial\n'
                         'import OrderOneStability\nimport CopyCapStability\n'
                         'import TripletCore\nimport TripletCounting\nimport TripletLeading\n'
-                        'import FullWaitDensity\n\n' + ''.join(
+                        'import FullWaitDensity\nimport PolynomialStart\n\n' + ''.join(
             f'#print axioms {name}\n' for name in AUDITED
         ))
         # The audit deliberately uses #print; apply the strict source linters
