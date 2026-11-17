@@ -14,7 +14,8 @@ SOURCES = ('Capacity.lean', 'LiveMaximum.lean', 'CopyBound.lean', 'CapacitySpect
            'OrderOneStability.lean', 'CopyCapStability.lean',
            'BoundaryTriplets.lean', 'TripletCore.lean', 'TripletCounting.lean', 'TripletLeading.lean',
            'FullWaitDensity.lean', 'PolynomialStart.lean', 'TopLayer.lean',
-           'TailCriteria.lean', 'SixRankCriteria.lean', 'SixRankTop.lean')
+           'TailCriteria.lean', 'SixRankCriteria.lean', 'SixRankTop.lean',
+           'MaskCancellation.lean', 'SixRankEncoding.lean', 'SixRankCancellation.lean')
 AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     f'Mahjong.VirtualHand.LiveSpectrum.{name}' for name in
     ('layer_sequential', 'add_layer', 'exists_live_iff', 'maximum', 'extremal_apply', 'extremal_live')
@@ -80,6 +81,14 @@ AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.SixRankTop.{name}' for name i
                   'defectBase_eq_residueBase', 'exists_free_coordinate_of_defect'))
 AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.SixRankTop.full_deficit_{i}{j}'
                  for i in range(6) for j in range(i, 6))
+AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
+                 ('flipMask_involutive', 'flipMask_ne', 'maskSign_flip', 'signed_mask_sum_eq_zero'))
+AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.SixRankTop.{name}' for name in
+                 ('pattern_le_two', 'maskHand_apply', 'maskHand_active', 'defectBase_size',
+                  'maskHand_size', 'decode_bandDefect', 'topEncode_decode',
+                  'maskHand_topEncode', 'codeEquiv', 'maskSign_topEncode', 'maskTail_flip',
+                  'pattern_signed_sum', 'top_signed_sum', 'numerator_coeff_eleven',
+                  'numerator_degree_ten', 'polynomialStart_le_five', 'counting_from_five'))
 ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
 ENTRY = re.compile(
     r"'([^\n]*?)' (?:depends on axioms:\s*\[([^]]*)\]|does not depend on any axioms)"
@@ -128,7 +137,9 @@ def main():
                         'import OrderOneStability\nimport CopyCapStability\n'
                         'import BoundaryTriplets\nimport TripletCore\nimport TripletCounting\nimport TripletLeading\n'
                         'import FullWaitDensity\nimport PolynomialStart\nimport TopLayer\n'
-                        'import TailCriteria\nimport SixRankCriteria\nimport SixRankTop\n\n' + ''.join(
+                        'import TailCriteria\nimport SixRankCriteria\nimport SixRankTop\n'
+                        'import MaskCancellation\nimport SixRankEncoding\n'
+                        'import SixRankCancellation\n\n' + ''.join(
             f'#print axioms {name}\n' for name in AUDITED
         ))
         # The audit deliberately uses #print; apply the strict source linters

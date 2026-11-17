@@ -27,6 +27,9 @@ resources:
   - TailCriteria.lean
   - SixRankCriteria.lean
   - SixRankTop.lean
+  - MaskCancellation.lean
+  - SixRankEncoding.lean
+  - SixRankCancellation.lean
   - check-lean.py
   - six-rank-cores.cpp
   - six-rank-cores.json
@@ -417,10 +420,10 @@ is confirmed, @thm-start gives the exact start $10-6+1=5$.
 @tbl-six-ranks compares that polynomial with direct counts of all uncapped hands of each fixed size.
 
 The direct count at $m=4$ differs from the polynomial by two, so the
-computed range cannot start earlier than five. The general Lean theorem
-provides the sufficient range $m\ge6$ at this order. It also gives
-$\deg P_2\le11$, so an exact start of five reduces to proving that
-the coefficient of $t^{11}$ is zero and that of $t^{10}$ is nonzero.
+computed range cannot start earlier than five. Lean now proves the
+sufficient range $m\ge5$ at this order: the highest allowed numerator
+coefficient cancels, giving $\deg P_2\le10$. An exact start of five still
+requires proving that the coefficient of $t^{10}$ is nonzero.
 
 The [top-layer reduction](TopLayer.lean) isolates the highest allowed
 coefficient without counting the entire core box. For each core define the
@@ -458,9 +461,22 @@ $t_0>0$, at least one of $t_1,t_4$ positive, and at least one of $t_2,t_5$
 positive; $t_3$ is irrelevant. The
 [free-coordinate theorem](SixRankTop.lean) covers every deficit-two pattern,
 using its representation by two possibly coincident missing tiles.
-The remaining step is to transport this invariance into a sign-reversing
-pairing of the numerator sum. Until that connection is checked, the
-proved six-rank starting bound remains six.
+The [encoding equivalence](SixRankEncoding.lean) identifies the full
+cores in this layer with the full pattern-mask codes. An inactive rank
+contributes $-1$ and an active rank contributes $1$, so the product of
+coordinate signs equals $(-1)^{6-r(a)}$. Toggling a free coordinate preserves
+full-sidedness and reverses that product. The
+[general mask cancellation](MaskCancellation.lean) pairs these terms,
+and the [six-rank cancellation theorem](SixRankCancellation.lean) gives
+
+$$
+[t^{11}]P_2(t)=0,\qquad \deg P_2\le10.
+$$
+
+Hence $s_2\le5$ and $H_2(m)=F_2(m)$ for every $m\ge5$. This sufficient
+range is proved without evaluating the full core table. The displayed
+numerical coefficients, including the proposed nonzero coefficient of
+$t^{10}$, remain computational data.
 
 The [C++ source](six-rank-cores.cpp) compares a triplet-greedy scan,
 normalized sequence templates, and literal recursive meld decomposition
@@ -484,6 +500,10 @@ produces the [polynomial coefficients and comparisons](six-rank-summary.json).
 These six-rank cardinalities are computational evidence. The symbolic
 Lean theorems above do not evaluate that finite core table.
 
+```{=latex}
+\newpage
+```
+
 To reproduce from the repository root:
 
 ```sh
@@ -505,9 +525,7 @@ and the equivalence with graded weak compositions.
 [TripletCounting.lean](TripletCounting.lean) proves @thm-count, the coefficient
 and denominator identities for the generating series, and the evaluation
 and degree bound of @thm-polynomial, including @eq-active-grade and the
-numerator degree bound. Mathlib supplies the weak-composition
-count through symmetric powers and the binomial polynomials through its
-Hilbert-polynomial API.
+numerator degree bound.
 
 [TripletLeading.lean](TripletLeading.lean) proves the
 residue-vector equivalence, the fully active core count, the exact degree
@@ -515,8 +533,7 @@ and leading coefficient, and the numerator value in @thm-leading.
 
 [FullWaitDensity.lean](FullWaitDensity.lean) proves the finite ambient
 count in @eq-ambient, positivity and containment, the ambient counting
-polynomial, and the real limit in @thm-density. The last step uses
-Mathlib's limit theorem for quotients of polynomials of equal degree.
+polynomial, and the real limit in @thm-density.
 
 [TopLayer.lean](TopLayer.lean) proves the defect-two coefficient reduction,
 the conditional degree and range improvement, reconstruction from masks and
@@ -528,15 +545,20 @@ edge/full-wait criteria for arbitrary triplet tails.
 and [SixRankTop.lean](SixRankTop.lean) proves a free coordinate for every
 six-rank deficit-two pattern, without enumerating tail values.
 
+[MaskCancellation.lean](MaskCancellation.lean) proves the generic
+sign-reversing mask involution. [SixRankEncoding.lean](SixRankEncoding.lean)
+proves the full-code equivalence, and
+[SixRankCancellation.lean](SixRankCancellation.lean) proves the vanishing
+coefficient, degree bound ten, and sufficient six-rank range from five.
+
 [PolynomialStart.lean](PolynomialStart.lean) proves reconstruction from the
 numerator, uniqueness of a polynomial counting on a tail, the exact boundary
 error, and both directions of the optimal-range criterion in @thm-start.
-It proves the criterion symbolically, using the actual numerator's degree.
 
 These files use Lean 4.35.0 against the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
-The common [checker](check-lean.py) compiles nineteen modules in a fresh
-temporary directory with strict linters and audits 134 declarations
+The common [checker](check-lean.py) compiles 22 modules in a fresh
+temporary directory with strict linters and audits 155 declarations
 against only `propext`, `Classical.choice`, and `Quot.sound`:
 
 ```sh

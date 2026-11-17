@@ -27,6 +27,9 @@ resources:
   - TailCriteria.lean
   - SixRankCriteria.lean
   - SixRankTop.lean
+  - MaskCancellation.lean
+  - SixRankEncoding.lean
+  - SixRankCancellation.lean
   - check-lean.py
 abstract: |
   Every full-sided Mahjong wait on $3n$ ranks with $m$ melds has each
@@ -212,8 +215,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-The [checker](check-lean.py) compiles nineteen source modules in a fresh temporary
-directory with strict linters, then audits 134 declarations. Only
+The [checker](check-lean.py) compiles 22 source modules in a fresh temporary
+directory with strict linters, then audits 155 declarations. Only
 `propext`, `Classical.choice`, and `Quot.sound` are permitted. Rendering the
 document is separate from checking the proofs. These notes remain an
 independent experiment in this fork.
