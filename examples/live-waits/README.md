@@ -48,6 +48,11 @@ Use `--lake /path/to/lake` if the pinned toolchain is not on `PATH`.
 In a standalone export, run `python check-lean.py --library /path/to/ninegates-lean4`
 from the exported folder instead.
 
+The six-rank diagnostic in `six-rank-cores.cpp` and `six-rank-summary.py`
+compares three winning algorithms and records a computed numerator. Its
+finite core cardinalities are ordinary computational data, separate from the
+Lean audit. See the final counting note for the reproduction commands.
+
 The mathematical reference is Xue and Zhong, *Beyond Nine Gates*,
 [arXiv:2611.06944v1](https://arxiv.org/abs/2611.06944v1). The additional Lean
 files establish the existence interval and copy-cap corollaries; they are a

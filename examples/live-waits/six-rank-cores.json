@@ -1,0 +1,430 @@
+{
+  "scope": "Finite diagnostic, not a Lean evaluation of core cardinalities",
+  "orders": [
+    {
+      "order": 1,
+      "ranks": 3,
+      "core_candidates": 729,
+      "congruent_candidates": 243,
+      "full_cores": 126,
+      "dense_cores": 9,
+      "core_draw_cross_checks": 729,
+      "total_draw_cross_checks": 4374,
+      "recursive_memo_states": 1088,
+      "numerator_degree": 3,
+      "numerator": [
+        0,
+        0,
+        6,
+        3
+      ],
+      "histogram": [
+        {
+          "grade": 2,
+          "active": 0,
+          "count": 6
+        },
+        {
+          "grade": 3,
+          "active": 0,
+          "count": 12
+        },
+        {
+          "grade": 3,
+          "active": 1,
+          "count": 9
+        },
+        {
+          "grade": 4,
+          "active": 0,
+          "count": 6
+        },
+        {
+          "grade": 4,
+          "active": 1,
+          "count": 27
+        },
+        {
+          "grade": 4,
+          "active": 2,
+          "count": 3
+        },
+        {
+          "grade": 5,
+          "active": 1,
+          "count": 18
+        },
+        {
+          "grade": 5,
+          "active": 2,
+          "count": 18
+        },
+        {
+          "grade": 6,
+          "active": 2,
+          "count": 18
+        },
+        {
+          "grade": 6,
+          "active": 3,
+          "count": 3
+        },
+        {
+          "grade": 7,
+          "active": 3,
+          "count": 6
+        }
+      ],
+      "counts_m_0_to_40": [
+        0,
+        0,
+        6,
+        21,
+        45,
+        78,
+        120,
+        171,
+        231,
+        300,
+        378,
+        465,
+        561,
+        666,
+        780,
+        903,
+        1035,
+        1176,
+        1326,
+        1485,
+        1653,
+        1830,
+        2016,
+        2211,
+        2415,
+        2628,
+        2850,
+        3081,
+        3321,
+        3570,
+        3828,
+        4095,
+        4371,
+        4656,
+        4950,
+        5253,
+        5565,
+        5886,
+        6216,
+        6555,
+        6903
+      ],
+      "direct_counts_m_0_to_8": [
+        0,
+        0,
+        6,
+        21,
+        45,
+        78,
+        120,
+        171,
+        231
+      ]
+    },
+    {
+      "order": 2,
+      "ranks": 6,
+      "core_candidates": 531441,
+      "congruent_candidates": 177147,
+      "full_cores": 52213,
+      "dense_cores": 243,
+      "core_draw_cross_checks": 1062882,
+      "total_draw_cross_checks": 2854386,
+      "recursive_memo_states": 391500,
+      "numerator_degree": 10,
+      "numerator": [
+        0,
+        0,
+        0,
+        8,
+        68,
+        141,
+        68,
+        -17,
+        -28,
+        1,
+        2
+      ],
+      "histogram": [
+        {
+          "grade": 3,
+          "active": 0,
+          "count": 8
+        },
+        {
+          "grade": 4,
+          "active": 0,
+          "count": 94
+        },
+        {
+          "grade": 4,
+          "active": 1,
+          "count": 22
+        },
+        {
+          "grade": 5,
+          "active": 0,
+          "count": 350
+        },
+        {
+          "grade": 5,
+          "active": 1,
+          "count": 328
+        },
+        {
+          "grade": 5,
+          "active": 2,
+          "count": 17
+        },
+        {
+          "grade": 6,
+          "active": 0,
+          "count": 596
+        },
+        {
+          "grade": 6,
+          "active": 1,
+          "count": 1430
+        },
+        {
+          "grade": 6,
+          "active": 2,
+          "count": 378
+        },
+        {
+          "grade": 6,
+          "active": 3,
+          "count": 2
+        },
+        {
+          "grade": 7,
+          "active": 0,
+          "count": 496
+        },
+        {
+          "grade": 7,
+          "active": 1,
+          "count": 2780
+        },
+        {
+          "grade": 7,
+          "active": 2,
+          "count": 2143
+        },
+        {
+          "grade": 7,
+          "active": 3,
+          "count": 156
+        },
+        {
+          "grade": 8,
+          "active": 0,
+          "count": 184
+        },
+        {
+          "grade": 8,
+          "active": 1,
+          "count": 2592
+        },
+        {
+          "grade": 8,
+          "active": 2,
+          "count": 5060
+        },
+        {
+          "grade": 8,
+          "active": 3,
+          "count": 1402
+        },
+        {
+          "grade": 8,
+          "active": 4,
+          "count": 12
+        },
+        {
+          "grade": 9,
+          "active": 0,
+          "count": 21
+        },
+        {
+          "grade": 9,
+          "active": 1,
+          "count": 1054
+        },
+        {
+          "grade": 9,
+          "active": 2,
+          "count": 5490
+        },
+        {
+          "grade": 9,
+          "active": 3,
+          "count": 4454
+        },
+        {
+          "grade": 9,
+          "active": 4,
+          "count": 355
+        },
+        {
+          "grade": 10,
+          "active": 1,
+          "count": 126
+        },
+        {
+          "grade": 10,
+          "active": 2,
+          "count": 2502
+        },
+        {
+          "grade": 10,
+          "active": 3,
+          "count": 5966
+        },
+        {
+          "grade": 10,
+          "active": 4,
+          "count": 1876
+        },
+        {
+          "grade": 10,
+          "active": 5,
+          "count": 16
+        },
+        {
+          "grade": 11,
+          "active": 2,
+          "count": 315
+        },
+        {
+          "grade": 11,
+          "active": 3,
+          "count": 3148
+        },
+        {
+          "grade": 11,
+          "active": 4,
+          "count": 3440
+        },
+        {
+          "grade": 11,
+          "active": 5,
+          "count": 304
+        },
+        {
+          "grade": 12,
+          "active": 3,
+          "count": 420
+        },
+        {
+          "grade": 12,
+          "active": 4,
+          "count": 2212
+        },
+        {
+          "grade": 12,
+          "active": 5,
+          "count": 958
+        },
+        {
+          "grade": 12,
+          "active": 6,
+          "count": 6
+        },
+        {
+          "grade": 13,
+          "active": 4,
+          "count": 315
+        },
+        {
+          "grade": 13,
+          "active": 5,
+          "count": 822
+        },
+        {
+          "grade": 13,
+          "active": 6,
+          "count": 90
+        },
+        {
+          "grade": 14,
+          "active": 5,
+          "count": 126
+        },
+        {
+          "grade": 14,
+          "active": 6,
+          "count": 126
+        },
+        {
+          "grade": 15,
+          "active": 6,
+          "count": 21
+        }
+      ],
+      "counts_m_0_to_40": [
+        0,
+        0,
+        0,
+        8,
+        116,
+        717,
+        2790,
+        8168,
+        19778,
+        41882,
+        80320,
+        142753,
+        238906,
+        380811,
+        583050,
+        862998,
+        1241066,
+        1740944,
+        2389844,
+        3218743,
+        4262626,
+        5560729,
+        7156782,
+        9099252,
+        11441586,
+        14242454,
+        17565992,
+        21482045,
+        26066410,
+        31401079,
+        37574482,
+        44681730,
+        52824858,
+        62113068,
+        72662972,
+        84598835,
+        98052818,
+        113165221,
+        130084726,
+        148968640,
+        169983138
+      ],
+      "direct_counts_m_0_to_8": [
+        0,
+        0,
+        0,
+        8,
+        116,
+        717,
+        2790,
+        8168,
+        19778
+      ]
+    }
+  ]
+}

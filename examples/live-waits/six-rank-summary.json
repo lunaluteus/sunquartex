@@ -1,0 +1,120 @@
+{
+  "scope": "Exact arithmetic applied to a computational core table; the core cardinalities are not evaluated in Lean.",
+  "orders": [
+    {
+      "order": 1,
+      "candidate_polynomial_cutoff": 1,
+      "polynomial_coefficients_low_to_high": [
+        "3",
+        "-15/2",
+        "9/2"
+      ],
+      "comparison_m_0_to_8": [
+        {
+          "m": 0,
+          "direct_full_count": 0,
+          "polynomial": "3"
+        },
+        {
+          "m": 1,
+          "direct_full_count": 0,
+          "polynomial": "0"
+        },
+        {
+          "m": 2,
+          "direct_full_count": 6,
+          "polynomial": "6"
+        },
+        {
+          "m": 3,
+          "direct_full_count": 21,
+          "polynomial": "21"
+        },
+        {
+          "m": 4,
+          "direct_full_count": 45,
+          "polynomial": "45"
+        },
+        {
+          "m": 5,
+          "direct_full_count": 78,
+          "polynomial": "78"
+        },
+        {
+          "m": 6,
+          "direct_full_count": 120,
+          "polynomial": "120"
+        },
+        {
+          "m": 7,
+          "direct_full_count": 171,
+          "polynomial": "171"
+        },
+        {
+          "m": 8,
+          "direct_full_count": 231,
+          "polynomial": "231"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "candidate_polynomial_cutoff": 5,
+      "polynomial_coefficients_low_to_high": [
+        "314",
+        "-5591/15",
+        "401/4",
+        "569/24",
+        "-61/4",
+        "81/40"
+      ],
+      "comparison_m_0_to_8": [
+        {
+          "m": 0,
+          "direct_full_count": 0,
+          "polynomial": "314"
+        },
+        {
+          "m": 1,
+          "direct_full_count": 0,
+          "polynomial": "52"
+        },
+        {
+          "m": 2,
+          "direct_full_count": 0,
+          "polynomial": "-20"
+        },
+        {
+          "m": 3,
+          "direct_full_count": 8,
+          "polynomial": "-5"
+        },
+        {
+          "m": 4,
+          "direct_full_count": 116,
+          "polynomial": "114"
+        },
+        {
+          "m": 5,
+          "direct_full_count": 717,
+          "polynomial": "717"
+        },
+        {
+          "m": 6,
+          "direct_full_count": 2790,
+          "polynomial": "2790"
+        },
+        {
+          "m": 7,
+          "direct_full_count": 8168,
+          "polynomial": "8168"
+        },
+        {
+          "m": 8,
+          "direct_full_count": 19778,
+          "polynomial": "19778"
+        }
+      ]
+    }
+  ]
+}

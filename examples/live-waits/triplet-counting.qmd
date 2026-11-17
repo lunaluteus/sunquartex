@@ -22,6 +22,10 @@ resources:
   - TripletLeading.lean
   - FullWaitDensity.lean
   - check-lean.py
+  - six-rank-cores.cpp
+  - six-rank-cores.json
+  - six-rank-summary.py
+  - six-rank-summary.json
 abstract: |
   A full-sided Mahjong wait has a unique decomposition into a bounded full
   core and freely added triplets at designated coordinates. At each fixed
@@ -313,6 +317,61 @@ $$
 
 For example it is $1/6$ at $m=2$ and $63/88$ at $m=10$, so the limiting
 statement can coexist with a substantial deficit at small meld counts.
+
+## A six-rank diagnostic {#sec-six-ranks}
+
+A separate ordinary-program computation explores how loose the uniform
+$5n$ cutoff is. For six ranks it checks all $9^6=531441$ core candidates,
+finds 52213 full cores, and gives the candidate numerator
+
+$$
+\begin{aligned}
+P_2(t)={}&8t^3+68t^4+141t^5\\
+&+68t^6-17t^7-28t^8\\
+&+t^9+2t^{10}.
+\end{aligned}
+$$
+
+This has $P_2(1)=243$, agreeing with @thm-leading. The table predicts an
+eventual polynomial range beginning at $m=5$: for a denominator
+$(1-t)^6$, a numerator of degree ten yields the binomial polynomial from
+$10-6+1=5$ onward. @tbl-six-ranks compares that polynomial with direct
+counts of all uncapped hands of each fixed size.
+
+The direct count at $m=4$ differs from the polynomial by two, so the
+computed range cannot start earlier than five. The general Lean theorem
+provides the sufficient range $m\ge10$ at this order.
+
+The [C++ source](six-rank-cores.cpp) compares a triplet-greedy scan,
+normalized sequence templates, and literal recursive meld decomposition
+on every draw case. For six ranks these are 1062882 core draw cases and
+1791504 further draw cases from the entire fixed-size sample spaces for
+$m=0,\ldots,8$. The core formula and generating-series coefficients are
+also compared through $m=40$. The three-rank run recovers the previously
+proved formula. The [raw data](six-rank-cores.json) include the full
+core-grade/active-rank histogram; [exact rational analysis](six-rank-summary.py)
+produces the [polynomial coefficients and comparisons](six-rank-summary.json).
+
+| $m$ | Direct full count | Polynomial value |
+| ---: | ---: | ---: |
+| 3 | 8 | $-5$ |
+| 4 | 116 | 114 |
+| 5 | 717 | 717 |
+| 6 | 2790 | 2790 |
+
+: Six-rank computational data {#tbl-six-ranks}
+
+These six-rank cardinalities are computational evidence. The symbolic
+Lean theorems above do not evaluate that finite core table.
+
+To reproduce from the repository root:
+
+```sh
+g++ -std=c++20 -O2 examples/live-waits/six-rank-cores.cpp \
+  -o /tmp/six-rank-cores
+/tmp/six-rank-cores > /tmp/six-rank-cores.json
+python3 examples/live-waits/six-rank-summary.py /tmp/six-rank-cores.json
+```
 
 ## Checked Lean sources {#sec-lean}
 
