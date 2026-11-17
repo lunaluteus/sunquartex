@@ -1,6 +1,6 @@
 ---
 title: Counting full waits from bounded cores
-subtitle: Unique triplet tails and eventual polynomial counts
+subtitle: Unique triplet tails and exact leading terms
 author:
   name: Luna Luteus
 date: 2026-11-17
@@ -19,14 +19,16 @@ resources:
   - CopyCapStability.lean
   - TripletCore.lean
   - TripletCounting.lean
+  - TripletLeading.lean
   - check-lean.py
 abstract: |
   A full-sided Mahjong wait has a unique decomposition into a bounded full
   core and freely added triplets at designated coordinates. At each fixed
   order this gives an exact finite sum for every meld-count coefficient,
   a rational ordinary generating series, and a rational-coefficient counting
-  polynomial valid for every meld count at least $8n$. The structural
-  decomposition and counting identities are checked in Lean.
+  polynomial valid for every meld count at least $8n$. Its degree is exactly
+  $3n-1$, with leading coefficient $3^{3n-1}/(3n-1)!$. The structural
+  decomposition, counting identities, and leading term are checked in Lean.
 format:
   html:
     embed-resources: true
@@ -214,21 +216,64 @@ $$
 It agrees with the known coefficients
 $F_1(m)=\binom{3m-2}{2}$ for $m\ge1$, and $F_1(0)=0$.
 
+## The exact degree and leading coefficient {#sec-leading}
+
+::: {#thm-leading}
+## The fully active contribution
+
+For every $n\ge1$, the polynomial in @thm-polynomial has degree exactly
+$3n-1$ and leading coefficient
+
+$$
+\frac{3^{3n-1}}{(3n-1)!}.
+$$
+
+The numerator in @eq-numerator satisfies
+
+$$
+P_n(1)=3^{3n-1}>0.
+$$
+:::
+
+A fully active core has $r(a)=3n$, so every coordinate lies in
+$\{6,7,8\}$. Proposition 6.2 of @xue-zhong-2026 says that a hand above
+the abundance threshold is full-sided whenever its size is one modulo
+three. That threshold is at most six in every coordinate. Thus the fully
+active cores are exactly the vectors in $\{6,7,8\}^{3n}$ whose coordinate
+sum is one modulo three.
+
+Choose residues at any $3n-1$ ranks freely. The sum condition determines
+the last residue, so there are exactly $3^{3n-1}$ such cores. Each
+contributes a binomial polynomial of degree $3n-1$, with leading
+coefficient $1/(3n-1)!$. Every other core has fewer active ranks and
+contributes smaller degree. This proves the exact degree and coefficient
+without finding any lower-dimensional core table.
+
+At $t=1$, a summand of $P_n(t)$ is one for a fully active core and zero
+for every other core. The same count proves the numerator identity in
+@thm-leading. In particular $1-t$ does not divide $P_n(t)$, so the
+common denominator $(1-t)^{3n}$ cannot be reduced by cancellation.
+
 ## Checked Lean sources {#sec-lean}
 
 [TripletCore.lean](TripletCore.lean) proves truncation, reconstruction,
 uniqueness, preservation of full-sidedness, the exact meld-count split,
 and the equivalence with graded weak compositions.
+
 [TripletCounting.lean](TripletCounting.lean) proves @thm-count, the coefficient
 and denominator identities for the generating series, and the evaluation
 and degree bound of @thm-polynomial. Mathlib supplies the weak-composition
 count through symmetric powers and the binomial polynomials through its
 Hilbert-polynomial API.
 
+[TripletLeading.lean](TripletLeading.lean) proves the
+residue-vector equivalence, the fully active core count, the exact degree
+and leading coefficient, and the numerator value in @thm-leading.
+
 These files use Lean 4.35.0 against the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
-The common [checker](check-lean.py) compiles eleven modules in a fresh
-temporary directory with strict linters and audits fifty-eight declarations
+The common [checker](check-lean.py) compiles twelve modules in a fresh
+temporary directory with strict linters and audits sixty-four declarations
 against only `propext`, `Classical.choice`, and `Quot.sound`:
 
 ```sh

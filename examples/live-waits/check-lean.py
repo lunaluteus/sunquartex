@@ -12,7 +12,7 @@ import tempfile
 SOURCES = ('Capacity.lean', 'LiveMaximum.lean', 'CopyBound.lean', 'CapacitySpectrum.lean',
            'OrderOneDuality.lean', 'OrderOneBoxes.lean', 'OrderOnePolynomial.lean',
            'OrderOneStability.lean', 'CopyCapStability.lean',
-           'TripletCore.lean', 'TripletCounting.lean')
+           'TripletCore.lean', 'TripletCounting.lean', 'TripletLeading.lean')
 AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     f'Mahjong.VirtualHand.LiveSpectrum.{name}' for name in
     ('layer_sequential', 'add_layer', 'exists_live_iff', 'maximum', 'extremal_apply', 'extremal_live')
@@ -42,6 +42,10 @@ AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
                   'parametersEquiv', 'fixedEquiv', 'row_card', 'full_card_formula',
                   'eventualPolynomial_eval', 'eventualPolynomial_degree',
                   'generatingSeries_coeff', 'generatingSeries_rational'))
+AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
+                 ('denseCoreEquiv', 'dense_core_card', 'eventualPolynomial_topCoeff',
+                  'eventualPolynomial_natDegree', 'eventualPolynomial_leadingCoeff',
+                  'numerator_eval_one'))
 ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
 ENTRY = re.compile(
     r"'([^\n]*?)' (?:depends on axioms:\s*\[([^]]*)\]|does not depend on any axioms)"
@@ -88,7 +92,7 @@ def main():
         audit.write_text('import Capacity\nimport CapacitySpectrum\nimport OrderOneDuality\n'
                         'import OrderOneBoxes\nimport OrderOnePolynomial\n'
                         'import OrderOneStability\nimport CopyCapStability\n'
-                        'import TripletCore\nimport TripletCounting\n\n' + ''.join(
+                        'import TripletCore\nimport TripletCounting\nimport TripletLeading\n\n' + ''.join(
             f'#print axioms {name}\n' for name in AUDITED
         ))
         # The audit deliberately uses #print; apply the strict source linters

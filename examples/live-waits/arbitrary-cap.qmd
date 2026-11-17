@@ -18,6 +18,7 @@ resources:
   - CopyCapStability.lean
   - TripletCore.lean
   - TripletCounting.lean
+  - TripletLeading.lean
   - check-lean.py
 abstract: |
   On $3n$ ranks, a live full-sided Mahjong wait with $m$ melds and copy cap
@@ -198,8 +199,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-The [checker](check-lean.py) compiles the eleven companion modules with strict
-linters in a temporary directory, then checks that the fifty-eight audited
+The [checker](check-lean.py) compiles the twelve companion modules with strict
+linters in a temporary directory, then checks that the sixty-four audited
 declarations use only `propext`, `Classical.choice`, and `Quot.sound`.
 Rendering the document displays the mathematics; this command separately
 checks the proofs. The construction uses no enumeration of candidate hands.
