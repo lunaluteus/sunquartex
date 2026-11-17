@@ -24,6 +24,9 @@ resources:
   - FullWaitDensity.lean
   - PolynomialStart.lean
   - TopLayer.lean
+  - TailCriteria.lean
+  - SixRankCriteria.lean
+  - SixRankTop.lean
   - check-lean.py
   - six-rank-cores.cpp
   - six-rank-cores.json
@@ -443,9 +446,21 @@ and literal recursive meld decomposition on these 1344 assignments. For
 every pattern it finds a coordinate whose activity can be toggled while
 preserving full-sidedness, so the two signs cancel. Its
 [output](top-layer-check.json) records the coordinate and full masks for
-each pattern. This toggle invariance remains computational; the Lean
-reduction does not yet certify the cancellation or improve the proved
-six-rank starting bound of six.
+each pattern.
+
+The toggle invariance is now proved in Lean. The
+[canonical tail criterion](TailCriteria.lean) expresses full-sidedness above
+any residue representative as linear inequalities in its triplet counts.
+The [six-rank criteria](SixRankCriteria.lean) specialize this to each pair
+of missing tiles, with arbitrary natural triplet counts rather than just
+zero or one. For example, above $(-1,3,5,5,3,1)$ full-sidedness requires
+$t_0>0$, at least one of $t_1,t_4$ positive, and at least one of $t_2,t_5$
+positive; $t_3$ is irrelevant. The
+[free-coordinate theorem](SixRankTop.lean) covers every deficit-two pattern,
+using its representation by two possibly coincident missing tiles.
+The remaining step is to transport this invariance into a sign-reversing
+pairing of the numerator sum. Until that connection is checked, the
+proved six-rank starting bound remains six.
 
 The [C++ source](six-rank-cores.cpp) compares a triplet-greedy scan,
 normalized sequence templates, and literal recursive meld decomposition
@@ -507,6 +522,12 @@ Mathlib's limit theorem for quotients of polynomials of equal degree.
 the conditional degree and range improvement, reconstruction from masks and
 defects, and the count of 21 six-rank defect patterns.
 
+[TailCriteria.lean](TailCriteria.lean) proves the affine size and canonical
+edge/full-wait criteria for arbitrary triplet tails.
+[SixRankCriteria.lean](SixRankCriteria.lean) proves all 21 symbolic criteria,
+and [SixRankTop.lean](SixRankTop.lean) proves a free coordinate for every
+six-rank deficit-two pattern, without enumerating tail values.
+
 [PolynomialStart.lean](PolynomialStart.lean) proves reconstruction from the
 numerator, uniqueness of a polynomial counting on a tail, the exact boundary
 error, and both directions of the optimal-range criterion in @thm-start.
@@ -514,8 +535,8 @@ It proves the criterion symbolically, using the actual numerator's degree.
 
 These files use Lean 4.35.0 against the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
-The common [checker](check-lean.py) compiles sixteen modules in a fresh
-temporary directory with strict linters and audits 104 declarations
+The common [checker](check-lean.py) compiles nineteen modules in a fresh
+temporary directory with strict linters and audits 134 declarations
 against only `propext`, `Classical.choice`, and `Quot.sound`:
 
 ```sh

@@ -216,4 +216,19 @@ theorem six_rank_top_card_le :
   norm_num [Rank] at bound ⊢
   exact bound
 
+/-- A deficit-two pattern consists of two possibly coincident missing tiles. -/
+theorem sum_two_representation {α : Type*} [Fintype α] [DecidableEq α] (d : α → ℕ)
+    (total : ∑ i, d i = 2) :
+    ∃ first second, ∀ i, d i =
+      (if i = first then 1 else 0) + (if i = second then 1 else 0) := by
+  classical
+  let f : α →₀ ℕ := Finsupp.equivFunOnFinite.symm d
+  have card : f.toMultiset.card = 2 := by
+    simpa [f, Finsupp.sum_fintype] using total
+  obtain ⟨first, second, equal⟩ := Multiset.card_eq_two.mp card
+  refine ⟨first, second, ?_⟩
+  intro i
+  have counts := congrArg (Multiset.count i) equal
+  simpa [f, Multiset.count_cons, Multiset.count_singleton, eq_comm, add_comm] using counts
+
 end Mahjong.VirtualHand.TripletCore

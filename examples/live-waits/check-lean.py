@@ -13,7 +13,8 @@ SOURCES = ('Capacity.lean', 'LiveMaximum.lean', 'CopyBound.lean', 'CapacitySpect
            'OrderOneDuality.lean', 'OrderOneBoxes.lean', 'OrderOnePolynomial.lean',
            'OrderOneStability.lean', 'CopyCapStability.lean',
            'BoundaryTriplets.lean', 'TripletCore.lean', 'TripletCounting.lean', 'TripletLeading.lean',
-           'FullWaitDensity.lean', 'PolynomialStart.lean', 'TopLayer.lean')
+           'FullWaitDensity.lean', 'PolynomialStart.lean', 'TopLayer.lean',
+           'TailCriteria.lean', 'SixRankCriteria.lean', 'SixRankTop.lean')
 AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     f'Mahjong.VirtualHand.LiveSpectrum.{name}' for name in
     ('layer_sequential', 'add_layer', 'exists_live_iff', 'maximum', 'extremal_apply', 'extremal_live')
@@ -71,6 +72,14 @@ AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
                   'numerator_degree_improves_iff', 'eventualPolynomial_eval_of_top_cancel',
                   'defect_pattern_card', 'six_rank_defect_pattern_card', 'top_core_reconstruct',
                   'topEncode_injective', 'six_rank_top_card_le'))
+AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
+                 ('sum_two_representation', 'drawPair_lift_iff', 'size_lift',
+                  'full_lift_iff_canonical'))
+AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.SixRankTop.{name}' for name in
+                 ('residueBase_size', 'residueBase_comm', 'exists_free_coordinate',
+                  'defectBase_eq_residueBase', 'exists_free_coordinate_of_defect'))
+AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.SixRankTop.full_deficit_{i}{j}'
+                 for i in range(6) for j in range(i, 6))
 ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
 ENTRY = re.compile(
     r"'([^\n]*?)' (?:depends on axioms:\s*\[([^]]*)\]|does not depend on any axioms)"
@@ -118,7 +127,8 @@ def main():
                         'import OrderOneBoxes\nimport OrderOnePolynomial\n'
                         'import OrderOneStability\nimport CopyCapStability\n'
                         'import BoundaryTriplets\nimport TripletCore\nimport TripletCounting\nimport TripletLeading\n'
-                        'import FullWaitDensity\nimport PolynomialStart\nimport TopLayer\n\n' + ''.join(
+                        'import FullWaitDensity\nimport PolynomialStart\nimport TopLayer\n'
+                        'import TailCriteria\nimport SixRankCriteria\nimport SixRankTop\n\n' + ''.join(
             f'#print axioms {name}\n' for name in AUDITED
         ))
         # The audit deliberately uses #print; apply the strict source linters

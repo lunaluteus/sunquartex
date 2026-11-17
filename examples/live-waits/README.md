@@ -44,8 +44,8 @@ of `lunaluteus/ninegates-lean4` at
 uv run python examples/live-waits/check-lean.py --library /path/to/ninegates-lean4
 ```
 
-The checker builds all sixteen Lean modules in a temporary directory with strict
-linters, then audits 104 declarations against the three standard axioms.
+The checker builds all nineteen Lean modules in a temporary directory with strict
+linters, then audits 134 declarations against the three standard axioms.
 Use `--lake /path/to/lake` if the pinned toolchain is not on `PATH`.
 In a standalone export, run `python check-lean.py --library /path/to/ninegates-lean4`
 from the exported folder instead.
@@ -55,8 +55,10 @@ compares three winning algorithms and records a computed numerator. Its
 finite core cardinalities are ordinary computational data, separate from the
 Lean audit. `TopLayer.lean` reduces the highest numerator coefficient to
 deficit-two cores; `top-layer-check.py` checks a candidate sign-cancelling
-toggle for each of the 21 six-rank defect patterns. The toggle invariance
-remains computational. See the final counting note for reproduction commands.
+toggle for each of the 21 six-rank defect patterns. `TailCriteria.lean`,
+`SixRankCriteria.lean`, and `SixRankTop.lean` now prove symbolic criteria
+and a free triplet coordinate for every pattern. Turning that invariance
+into the signed-sum cancellation remains open. See the final counting note for reproduction commands.
 
 The mathematical reference is Xue and Zhong, *Beyond Nine Gates*,
 [arXiv:2611.06944v1](https://arxiv.org/abs/2611.06944v1). The additional Lean
