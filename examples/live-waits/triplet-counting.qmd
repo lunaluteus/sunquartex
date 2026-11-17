@@ -30,6 +30,9 @@ resources:
   - MaskCancellation.lean
   - SixRankEncoding.lean
   - SixRankCancellation.lean
+  - SixRankScan.lean
+  - NextLayer.lean
+  - WeightedMasks.lean
   - check-lean.py
   - six-rank-cores.cpp
   - six-rank-cores.json
@@ -478,6 +481,7 @@ range is proved without evaluating the full core table. The displayed
 numerical coefficients, including the proposed nonzero coefficient of
 $t^{10}$, remain computational data.
 
+
 The [C++ source](six-rank-cores.cpp) compares a triplet-greedy scan,
 normalized sequence templates, and literal recursive meld decomposition
 on every draw case. For six ranks these are 198450 core draw cases and
@@ -500,8 +504,25 @@ produces the [polynomial coefficients and comparisons](six-rank-summary.json).
 These six-rank cardinalities are computational evidence. The symbolic
 Lean theorems above do not evaluate that finite core table.
 
+The [next-layer formula](NextLayer.lean) works at every $n\ge2$.
+Writing $q(a)=3n-r(a)$, it gives
+
+$$
+\begin{aligned}
+[t^{8n-6}]P_n(t)
+={}&\sum_{\delta(a)=2}q(a)(-1)^{q(a)-1}\\
+&+\sum_{\delta(a)=5}(-1)^{q(a)},
+\end{aligned}
+$$
+
+where $\delta(a)=\sum_i\delta_i$ and a term with $q(a)=0$ in the
+first sum is zero. [Weighted mask cancellation](WeightedMasks.lean)
+shows that two distinct free coordinates eliminate even the weighted
+contribution. This separates the remaining optimality question into two
+thin layers; their numerical contributions at six ranks are not yet certified.
+
 ```{=latex}
-\newpage
+\begin{samepage}
 ```
 
 To reproduce from the repository root:
@@ -514,61 +535,45 @@ python3 examples/live-waits/six-rank-summary.py /tmp/six-rank-cores.json
 python3 examples/live-waits/top-layer-check.py
 ```
 
+```{=latex}
+\end{samepage}
+```
+
 ## Checked Lean sources {#sec-lean}
 
-[BoundaryTriplets.lean](BoundaryTriplets.lean) proves local triplet removal,
-the profile cap for minimal full waits, and the improved minimal meld-count
-bound. [TripletCore.lean](TripletCore.lean) proves truncation, reconstruction,
-uniqueness, preservation of full-sidedness, the exact meld-count split,
-and the equivalence with graded weak compositions.
+[BoundaryTriplets.lean](BoundaryTriplets.lean) proves local removal and caps;
+[TripletCore.lean](TripletCore.lean) proves the unique graded decomposition.
+[TripletCounting.lean](TripletCounting.lean) gives the finite count, rational
+series and polynomial evaluation, while [TripletLeading.lean](TripletLeading.lean)
+proves the exact degree and leading term.
+[FullWaitDensity.lean](FullWaitDensity.lean) proves density one, and
+[PolynomialStart.lean](PolynomialStart.lean) proves the exact numerator-degree
+criterion for the first polynomial index.
 
-[TripletCounting.lean](TripletCounting.lean) proves @thm-count, the coefficient
-and denominator identities for the generating series, and the evaluation
-and degree bound of @thm-polynomial, including @eq-active-grade and the
-numerator degree bound.
+[TopLayer.lean](TopLayer.lean) reduces the highest coefficient to deficit-two
+cores. [TailCriteria.lean](TailCriteria.lean) gives the canonical tail criterion;
+[SixRankScan.lean](SixRankScan.lean) shares closed scan formulas across the 21
+criteria in [SixRankCriteria.lean](SixRankCriteria.lean).
+[SixRankTop.lean](SixRankTop.lean) proves a free coordinate for every pattern.
+[SixRankEncoding.lean](SixRankEncoding.lean) identifies the full codes with full
+cores. [MaskCancellation.lean](MaskCancellation.lean) and
+[SixRankCancellation.lean](SixRankCancellation.lean) complete the cancellation,
+degree bound ten, and sufficient six-rank range from five.
 
-[TripletLeading.lean](TripletLeading.lean) proves the
-residue-vector equivalence, the fully active core count, the exact degree
-and leading coefficient, and the numerator value in @thm-leading.
-
-[FullWaitDensity.lean](FullWaitDensity.lean) proves the finite ambient
-count in @eq-ambient, positivity and containment, the ambient counting
-polynomial, and the real limit in @thm-density.
-
-[TopLayer.lean](TopLayer.lean) proves the defect-two coefficient reduction,
-the conditional degree and range improvement, reconstruction from masks and
-defects, and the count of 21 six-rank defect patterns.
-
-[TailCriteria.lean](TailCriteria.lean) proves the affine size and canonical
-edge/full-wait criteria for arbitrary triplet tails.
-[SixRankCriteria.lean](SixRankCriteria.lean) proves all 21 symbolic criteria,
-and [SixRankTop.lean](SixRankTop.lean) proves a free coordinate for every
-six-rank deficit-two pattern, without enumerating tail values.
-
-[MaskCancellation.lean](MaskCancellation.lean) proves the generic
-sign-reversing mask involution. [SixRankEncoding.lean](SixRankEncoding.lean)
-proves the full-code equivalence, and
-[SixRankCancellation.lean](SixRankCancellation.lean) proves the vanishing
-coefficient, degree bound ten, and sufficient six-rank range from five.
-
-[PolynomialStart.lean](PolynomialStart.lean) proves reconstruction from the
-numerator, uniqueness of a polynomial counting on a tail, the exact boundary
-error, and both directions of the optimal-range criterion in @thm-start.
+[NextLayer.lean](NextLayer.lean) proves the next-coefficient reduction, and
+[WeightedMasks.lean](WeightedMasks.lean) proves weighted cancellation at two
+free coordinates. These symbolic statements do not evaluate the finite core table.
 
 These files use Lean 4.35.0 against the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
-The common [checker](check-lean.py) compiles 22 modules in a fresh
-temporary directory with strict linters and audits 155 declarations
+The common [checker](check-lean.py) compiles 25 modules in a fresh
+temporary directory with strict linters and audits 163 declarations
 against only `propext`, `Classical.choice`, and `Quot.sound`:
 
 ```sh
 uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
-
-The diagnostic above also checks the three-rank profile box against the known
-order-one formula. The general proofs work with symbolic finite types and
-require no enumeration of higher-order core tables.
 
 The [copy-cap stabilization note](copy-cap-stability.html) gives the sharp
 physical cap at which live counts equal these unrestricted counts.

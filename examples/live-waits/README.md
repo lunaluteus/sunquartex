@@ -45,8 +45,8 @@ of `lunaluteus/ninegates-lean4` at
 uv run python examples/live-waits/check-lean.py --library /path/to/ninegates-lean4
 ```
 
-The checker builds all 22 Lean modules in a temporary directory with strict
-linters, then audits 155 declarations against the three standard axioms.
+The checker builds all 25 Lean modules in a temporary directory with strict
+linters, then audits 163 declarations against the three standard axioms.
 Use `--lake /path/to/lake` if the pinned toolchain is not on `PATH`.
 In a standalone export, run `python check-lean.py --library /path/to/ninegates-lean4`
 from the exported folder instead.
@@ -62,7 +62,10 @@ and a free triplet coordinate for every pattern. `SixRankEncoding.lean`
 identifies the full cores with full pattern-mask codes; `MaskCancellation.lean`
 and `SixRankCancellation.lean` prove the signed cancellation, numerator degree
 at most ten, and the six-rank counting formula for every meld count at least
-five. Exact optimality at five remains unproved. See the final counting note
+five. `NextLayer.lean` isolates the next coefficient into deficit-two and
+deficit-five contributions; `WeightedMasks.lean` proves weighted cancellation
+when two coordinates are free. `SixRankScan.lean` shares closed canonical
+scan formulas across the 21 criteria. Exact optimality at five remains unproved. See the final counting note
 for reproduction commands.
 
 The mathematical reference is Xue and Zhong, *Beyond Nine Gates*,

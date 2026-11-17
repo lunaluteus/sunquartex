@@ -29,6 +29,9 @@ resources:
   - MaskCancellation.lean
   - SixRankEncoding.lean
   - SixRankCancellation.lean
+  - SixRankScan.lean
+  - NextLayer.lean
+  - WeightedMasks.lean
   - check-lean.py
 abstract: |
   On three labelled ranks, live full-sided Mahjong waits at copy cap $q$
@@ -235,8 +238,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-It compiles 22 source modules in a fresh temporary directory with strict
-linters, then audits 155 declarations. Only `propext`, `Classical.choice`,
+It compiles 25 source modules in a fresh temporary directory with strict
+linters, then audits 163 declarations. Only `propext`, `Classical.choice`,
 and `Quot.sound` are permitted. Rendering the note does not perform this check.
 These independent experiments remain separate from the pending library PR.
 

@@ -14,8 +14,9 @@ SOURCES = ('Capacity.lean', 'LiveMaximum.lean', 'CopyBound.lean', 'CapacitySpect
            'OrderOneStability.lean', 'CopyCapStability.lean',
            'BoundaryTriplets.lean', 'TripletCore.lean', 'TripletCounting.lean', 'TripletLeading.lean',
            'FullWaitDensity.lean', 'PolynomialStart.lean', 'TopLayer.lean',
-           'TailCriteria.lean', 'SixRankCriteria.lean', 'SixRankTop.lean',
-           'MaskCancellation.lean', 'SixRankEncoding.lean', 'SixRankCancellation.lean')
+           'TailCriteria.lean', 'SixRankScan.lean', 'SixRankCriteria.lean', 'SixRankTop.lean',
+           'MaskCancellation.lean', 'SixRankEncoding.lean', 'SixRankCancellation.lean',
+           'NextLayer.lean', 'WeightedMasks.lean')
 AUDITED = ('SunQuarTeX.Examples.live_capacity',) + tuple(
     f'Mahjong.VirtualHand.LiveSpectrum.{name}' for name in
     ('layer_sequential', 'add_layer', 'exists_live_iff', 'maximum', 'extremal_apply', 'extremal_live')
@@ -89,6 +90,12 @@ AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.SixRankTop.{name}' for name i
                   'maskHand_topEncode', 'codeEquiv', 'maskSign_topEncode', 'maskTail_flip',
                   'pattern_signed_sum', 'top_signed_sum', 'numerator_coeff_eleven',
                   'numerator_degree_ten', 'polynomialStart_le_five', 'counting_from_five'))
+AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.SixRankTop.{name}' for name in
+                 ('canonicalSequence_six', 'canonicalSequence_six_of_le',
+                  'canonicalTriplet_six', 'virtuallyMeldable_six'))
+AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
+                 ('cell_next_coeff', 'numerator_next_coeff',
+                  'maskNextSign_eq', 'weighted_signed_sum_eq_zero'))
 ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
 ENTRY = re.compile(
     r"'([^\n]*?)' (?:depends on axioms:\s*\[([^]]*)\]|does not depend on any axioms)"
@@ -139,7 +146,8 @@ def main():
                         'import FullWaitDensity\nimport PolynomialStart\nimport TopLayer\n'
                         'import TailCriteria\nimport SixRankCriteria\nimport SixRankTop\n'
                         'import MaskCancellation\nimport SixRankEncoding\n'
-                        'import SixRankCancellation\n\n' + ''.join(
+                        'import SixRankCancellation\nimport SixRankScan\n'
+                        'import NextLayer\nimport WeightedMasks\n\n' + ''.join(
             f'#print axioms {name}\n' for name in AUDITED
         ))
         # The audit deliberately uses #print; apply the strict source linters

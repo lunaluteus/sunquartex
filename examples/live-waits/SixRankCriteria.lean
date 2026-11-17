@@ -2,7 +2,7 @@
 Copyright (c) 2026 Luna Luteus. Released under Apache 2.0.
 Authors: Luna Luteus
 -/
-import TailCriteria
+import SixRankScan
 
 /-!
 # Symbolic six-rank top-layer criteria
@@ -39,8 +39,7 @@ theorem full_deficit_00 (t : Rank 2 → ℕ) :
        (0 < t 0 ∧ 0 < t 1 ∧ 0 < t 5) ∨ (0 < t 0 ∧ 0 < t 4 ∧ 0 < t 5) := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -50,8 +49,7 @@ theorem full_deficit_01 (t : Rank 2 → ℕ) :
       True := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -61,8 +59,7 @@ theorem full_deficit_02 (t : Rank 2 → ℕ) :
       0 < t 2 ∨ 0 < t 5 := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -72,8 +69,7 @@ theorem full_deficit_03 (t : Rank 2 → ℕ) :
       0 < t 0 ∨ 0 < t 3 := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -83,8 +79,7 @@ theorem full_deficit_04 (t : Rank 2 → ℕ) :
       True := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -94,8 +89,7 @@ theorem full_deficit_05 (t : Rank 2 → ℕ) :
       True := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -105,8 +99,7 @@ theorem full_deficit_11 (t : Rank 2 → ℕ) :
       (0 < t 1 ∧ 0 < t 2) ∨ (0 < t 1 ∧ 0 < t 5) := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -116,8 +109,7 @@ theorem full_deficit_12 (t : Rank 2 → ℕ) :
       (0 < t 1 ∧ 0 < t 2) ∨ (0 < t 2 ∧ 0 < t 4) ∨ (0 < t 1 ∧ 0 < t 5) ∨ (0 < t 4 ∧ 0 < t 5) := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -127,8 +119,7 @@ theorem full_deficit_13 (t : Rank 2 → ℕ) :
       0 < t 0 ∨ 0 < t 3 := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -138,8 +129,7 @@ theorem full_deficit_14 (t : Rank 2 → ℕ) :
       True := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -149,8 +139,7 @@ theorem full_deficit_15 (t : Rank 2 → ℕ) :
       True := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -160,8 +149,7 @@ theorem full_deficit_22 (t : Rank 2 → ℕ) :
       0 < t 2 ∨ 0 < t 5 := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -171,8 +159,7 @@ theorem full_deficit_23 (t : Rank 2 → ℕ) :
       (0 < t 0 ∧ 0 < t 2) ∨ (0 < t 2 ∧ 0 < t 3) ∨ (0 < t 0 ∧ 0 < t 5) ∨ (0 < t 3 ∧ 0 < t 5) := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -182,8 +169,7 @@ theorem full_deficit_24 (t : Rank 2 → ℕ) :
       0 < t 2 ∨ 0 < t 5 := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -193,8 +179,7 @@ theorem full_deficit_25 (t : Rank 2 → ℕ) :
       0 < t 2 ∨ 0 < t 5 := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -204,8 +189,7 @@ theorem full_deficit_33 (t : Rank 2 → ℕ) :
       0 < t 0 ∨ 0 < t 3 := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -215,8 +199,7 @@ theorem full_deficit_34 (t : Rank 2 → ℕ) :
       (0 < t 0 ∧ 0 < t 1) ∨ (0 < t 1 ∧ 0 < t 3) ∨ (0 < t 0 ∧ 0 < t 4) ∨ (0 < t 3 ∧ 0 < t 4) := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -226,8 +209,7 @@ theorem full_deficit_35 (t : Rank 2 → ℕ) :
       0 < t 0 ∨ 0 < t 3 := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -237,8 +219,7 @@ theorem full_deficit_44 (t : Rank 2 → ℕ) :
       (0 < t 0 ∧ 0 < t 4) ∨ (0 < t 3 ∧ 0 < t 4) := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -248,8 +229,7 @@ theorem full_deficit_45 (t : Rank 2 → ℕ) :
       True := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
@@ -260,8 +240,7 @@ theorem full_deficit_55 (t : Rank 2 → ℕ) :
       (0 < t 0 ∧ 0 < t 4 ∧ 0 < t 5) ∨ (0 < t 3 ∧ 0 < t 4 ∧ 0 < t 5) := by
   rw [full_lift_iff_canonical _ (by rw [residueBase_size]; norm_num) t]
   norm_num [Fin.forall_fin_succ, Fin.exists_fin_succ,
-    virtuallyMeldable_iff_canonicalSequence, canonicalTriplet, canonicalSequence,
-    sequenceScan, SequenceScan.run, coefficient, residueBase,
+    virtuallyMeldable_six, canonicalTriplet_six, scanTriplets, scanStates, residueBase,
     Pi.add_apply, Pi.sub_apply, single, pair, Matrix.vecHead, Matrix.vecTail]
   all_goals omega
 
