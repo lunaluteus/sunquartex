@@ -9,7 +9,9 @@ disjoint box decomposition and proves the generating polynomial for individual
 meld counts. It also identifies the sharp copy cap at which each fixed-meld count
 stabilizes. The fourth note `copy-cap-stability.qmd` proves the sharp
 stabilization cap at every higher order using a uniform coordinate bound and
-an explicit extremal family. All four sources render to HTML, PDF, and GitHub Markdown.
+an explicit extremal family. The fifth note `triplet-counting.qmd` gives a unique
+bounded-core decomposition, an exact finite counting formula, a rational
+generating series, and eventual polynomial counts. All five sources render to HTML, PDF, and GitHub Markdown.
 The PDF overrides the shared theorem counter so its theorem numbers agree with
 the other two formats.
 
@@ -21,6 +23,7 @@ uv run quarto render examples/live-waits/live-waits.qmd --to all --quiet
 uv run quarto render examples/live-waits/arbitrary-cap.qmd --to all --quiet
 uv run quarto render examples/live-waits/three-ranks.qmd --to all --quiet
 uv run quarto render examples/live-waits/copy-cap-stability.qmd --to all --quiet
+uv run quarto render examples/live-waits/triplet-counting.qmd --to all --quiet
 ```
 
 PDF also needs a TeX installation; `quarto install tinytex` is one option.
@@ -37,8 +40,8 @@ of `lunaluteus/ninegates-lean4` at
 uv run python examples/live-waits/check-lean.py --library /path/to/ninegates-lean4
 ```
 
-The checker builds all nine Lean modules in a temporary directory with strict
-linters, then audits forty declarations against the three standard axioms.
+The checker builds all eleven Lean modules in a temporary directory with strict
+linters, then audits fifty-eight declarations against the three standard axioms.
 Use `--lake /path/to/lake` if the pinned toolchain is not on `PATH`.
 In a standalone export, run `python check-lean.py --library /path/to/ninegates-lean4`
 from the exported folder instead.

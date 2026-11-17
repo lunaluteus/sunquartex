@@ -17,6 +17,8 @@ resources:
   - OrderOnePolynomial.lean
   - OrderOneStability.lean
   - CopyCapStability.lean
+  - TripletCore.lean
+  - TripletCounting.lean
   - check-lean.py
 abstract: |
   Every full-sided Mahjong wait on $3n$ ranks with $m$ melds has each
@@ -183,6 +185,9 @@ The earlier minimum-cap result excludes $q\le3$. The classification gives
 the unique cap-four live hand and eight unrestricted full waits. The new
 threshold $3((n+1)-n)+2=5$ then admits all eight.
 
+The [bounded-core counting note](triplet-counting.html) expresses the unrestricted
+count using finite core data and proves its eventual polynomial behavior.
+
 ## Checked Lean source {#sec-lean}
 
 [CopyCapStability.lean](CopyCapStability.lean) proves the coordinate bound,
@@ -199,8 +204,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-The [checker](check-lean.py) compiles nine source modules in a fresh temporary
-directory with strict linters, then audits forty declarations. Only
+The [checker](check-lean.py) compiles eleven source modules in a fresh temporary
+directory with strict linters, then audits fifty-eight declarations. Only
 `propext`, `Classical.choice`, and `Quot.sound` are permitted. Rendering the
 document is separate from checking the proofs. These notes remain an
 independent experiment in this fork.

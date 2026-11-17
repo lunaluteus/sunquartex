@@ -1,0 +1,246 @@
+---
+title: Counting full waits from bounded cores
+subtitle: Unique triplet tails and eventual polynomial counts
+author:
+  name: Luna Luteus
+date: 2026-11-17
+lang: en
+bibliography: live-waits.bib
+number-sections: true
+resources:
+  - Capacity.lean
+  - LiveMaximum.lean
+  - CopyBound.lean
+  - CapacitySpectrum.lean
+  - OrderOneDuality.lean
+  - OrderOneBoxes.lean
+  - OrderOnePolynomial.lean
+  - OrderOneStability.lean
+  - CopyCapStability.lean
+  - TripletCore.lean
+  - TripletCounting.lean
+  - check-lean.py
+abstract: |
+  A full-sided Mahjong wait has a unique decomposition into a bounded full
+  core and freely added triplets at designated coordinates. At each fixed
+  order this gives an exact finite sum for every meld-count coefficient,
+  a rational ordinary generating series, and a rational-coefficient counting
+  polynomial valid for every meld count at least $8n$. The structural
+  decomposition and counting identities are checked in Lean.
+format:
+  html:
+    embed-resources: true
+  pdf:
+    custom-theorem:
+      numbered-alike: false
+  gfm: default
+---
+
+## Finite data for all meld counts {#sec-question}
+
+Use the model of @xue-zhong-2026. There are $3n$ labelled ranks, and a
+full-sided $(n,m)$-wait is a nonnegative multiplicity vector of size $3m+1$
+that wins after every draw. Melds are triplets or three consecutive ranks.
+Fix $n\ge1$, and let $F_n(m)$ count these hands without a physical copy cap.
+
+Adding any triplet preserves full-sidedness. The proof of Proposition 6.8
+in the cited paper also shows that a coordinate of at least nine supplies
+a removable triplet for every winning draw. These two facts yield a
+disjoint parametrization with finite data independent of $m$.
+
+For a nonnegative integer $z$, define
+
+$$
+\rho(z)=
+\begin{cases}
+z,&z<6,\\
+6+(z\bmod3),&z\ge6,
+\end{cases}
+$$ {#eq-truncation}
+
+Put $\tau(z)=(z-\rho(z))/3$, a nonnegative integer.
+Then $0\le\rho(z)\le8$ and $z=\rho(z)+3\tau(z)$.
+Apply these functions coordinatewise to a hand.
+
+Let $\mathcal K_n$ be the finite set of full waits whose coordinates lie
+in $\{0,\ldots,8\}$. For $a\in\mathcal K_n$, write
+
+$$
+\begin{aligned}
+\kappa(a)&=(|a|-1)/3,\\
+S(a)&=\{i:a_i\ge6\},\\
+r(a)&=|S(a)|.
+\end{aligned}
+$$
+
+Every core has $\kappa(a)<8n$: its size is at most $24n$, while
+$|a|=3\kappa(a)+1$.
+
+::: {#thm-core}
+## Unique core and tails
+
+Every full wait has a unique expression
+
+$$
+c=a+3k,
+\qquad a\in\mathcal K_n,
+$$
+
+where $k_i$ is an arbitrary nonnegative integer at each $i\in S(a)$,
+and $k_i=0$ elsewhere. Conversely every such expression is a full wait.
+The meld count is
+
+$$
+m=\kappa(a)+\sum_{i\in S(a)}k_i.
+$$ {#eq-grade}
+:::
+
+The core in this theorem is $a_i=\rho(c_i)$, and its tail is
+$k_i=\tau(c_i)$. For example, $(3,1,12)$ has core $(3,1,6)$ and tail
+$(0,0,2)$: the original five melds split into three core melds and two
+added triplets.
+
+::: {.proof}
+
+Whenever $c_i\ge9$, remove a triplet at $i$. The resulting hand remains
+a full wait and has one fewer meld. Its truncation is unchanged, because
+both $c_i$ and $c_i-3$ are at least six and have the same residue modulo
+three. Repeating terminates at the coordinatewise truncation, a full wait
+bounded by eight. Adding the removed triplets recovers the original hand.
+
+For uniqueness, a coordinate $a_i<6$ has zero tail, so $c_i=a_i<6$.
+At a coordinate $6\le a_i\le8$, the residue of $c_i$ modulo three
+determines $a_i$, and then $k_i=(c_i-a_i)/3$ is determined too.
+Summing the coordinate identity proves @eq-grade.
+:::
+
+The threshold of six makes these cells disjoint. A core may still contain
+removable melds; the truncation is designed for uniqueness of the cells.
+
+## An exact finite counting formula {#sec-formula}
+
+Let $\operatorname{MC}(r,s)$ count weak compositions of $s$ into $r$ parts:
+
+$$
+\operatorname{MC}(r,s)=
+\begin{cases}
+\binom{r+s-1}{s},&r\ge1,\\
+1,&r=0,\ s=0,\\
+0,&r=0,\ s>0.
+\end{cases}
+$$
+
+::: {#thm-count}
+## Counts from cores
+
+For every natural meld count $m$, the number $F_n(m)$ equals
+
+$$
+\sum_{\substack{a\in\mathcal K_n\\\kappa(a)\le m}}
+\operatorname{MC}\bigl(r(a),m-\kappa(a)\bigr).
+$$
+:::
+
+For each core, @eq-grade leaves a weak composition of the remaining meld
+count among its active ranks. @thm-core gives a bijection, so different
+cores never count the same hand. Cores with $r(a)=0$ contribute a single
+hand at $m=\kappa(a)$.
+
+This is a finite formula at every fixed $n$. Evaluating it still requires
+finding the bounded full cores. The displayed box contains $9^{3n}$
+candidates, so direct evaluation can be large even though that box no
+longer grows with $m$.
+
+## Rational generating series {#sec-series}
+
+Treat the ordinary generating series formally:
+$G_n(t)=\sum_{m\ge0}F_n(m)t^m$. Each active rank contributes an independent
+geometric series, and @thm-count gives
+
+$$
+G_n(t)=\sum_{a\in\mathcal K_n}
+\frac{t^{\kappa(a)}}{(1-t)^{r(a)}}.
+$$ {#eq-series}
+
+Since $r(a)\le3n$, this has the common denominator $(1-t)^{3n}$.
+More explicitly,
+
+$$
+(1-t)^{3n}G_n(t)=P_n(t),
+$$ {#eq-numerator}
+
+where
+
+$$
+P_n(t)=\sum_{a\in\mathcal K_n}
+t^{\kappa(a)}(1-t)^{3n-r(a)}.
+$$
+
+The numerator is a finite polynomial. @eq-series and @eq-numerator are
+formal power-series identities, with no analytic convergence condition.
+
+## Eventual polynomial behavior {#sec-polynomial}
+
+::: {#thm-polynomial}
+## A uniform polynomial range
+
+There is an explicit polynomial $H_n(x)\in\mathbb Q[x]$ of degree at most
+$3n-1$ such that
+
+$$
+F_n(m)=H_n(m)\qquad(m\ge8n).
+$$
+:::
+
+Use binomial coefficients as polynomials in their upper argument and set
+
+$$
+H_n(x)=\sum_{\substack{a\in\mathcal K_n\\r(a)>0}}
+\binom{x-\kappa(a)+r(a)-1}{r(a)-1}.
+$$
+
+For $m\ge8n$, every core has $\kappa(a)<m$. The zero-active-rank cells
+contribute nothing, and each remaining term in @thm-count is the displayed
+binomial polynomial evaluated at $m$. Its degree is $r(a)-1\le3n-1$,
+proving @thm-polynomial. The bound $8n$ is a uniform sufficient starting
+point; smaller starting points can result after cancellations.
+
+For three ranks, the [earlier exact formula](three-ranks.html) simplifies to
+
+$$
+G_1(t)=\frac{6t^2+3t^3}{(1-t)^3}.
+$$
+
+It agrees with the known coefficients
+$F_1(m)=\binom{3m-2}{2}$ for $m\ge1$, and $F_1(0)=0$.
+
+## Checked Lean sources {#sec-lean}
+
+[TripletCore.lean](TripletCore.lean) proves truncation, reconstruction,
+uniqueness, preservation of full-sidedness, the exact meld-count split,
+and the equivalence with graded weak compositions.
+[TripletCounting.lean](TripletCounting.lean) proves @thm-count, the coefficient
+and denominator identities for the generating series, and the evaluation
+and degree bound of @thm-polynomial. Mathlib supplies the weak-composition
+count through symmetric powers and the binomial polynomials through its
+Hilbert-polynomial API.
+
+These files use Lean 4.35.0 against the structural library at
+[this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
+The common [checker](check-lean.py) compiles eleven modules in a fresh
+temporary directory with strict linters and audits fifty-eight declarations
+against only `propext`, `Classical.choice`, and `Quot.sound`:
+
+```sh
+uv run python examples/live-waits/check-lean.py \
+  --library /path/to/ninegates-lean4
+```
+
+A separate small diagnostic checks the three-rank core box against the known
+order-one formula. The general proofs work with symbolic finite types and
+require no enumeration of higher-order core tables.
+
+The [copy-cap stabilization note](copy-cap-stability.html) gives the sharp
+physical cap at which live counts equal these unrestricted counts.
+
+## References {#sec-references}
