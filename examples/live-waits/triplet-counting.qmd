@@ -1,6 +1,6 @@
 ---
 title: Counting full waits from bounded cores
-subtitle: Unique triplet tails and exact leading terms
+subtitle: Bounded cores, exact leading terms, and density one
 author:
   name: Luna Luteus
 date: 2026-11-17
@@ -20,6 +20,7 @@ resources:
   - TripletCore.lean
   - TripletCounting.lean
   - TripletLeading.lean
+  - FullWaitDensity.lean
   - check-lean.py
 abstract: |
   A full-sided Mahjong wait has a unique decomposition into a bounded full
@@ -29,6 +30,8 @@ abstract: |
   polynomial valid for every meld count at least $8n$. Its degree is exactly
   $3n-1$, with leading coefficient $3^{3n-1}/(3n-1)!$. The structural
   decomposition, counting identities, and leading term are checked in Lean.
+  The resulting density of full waits among uniformly sampled uncapped
+  multiplicity vectors tends to one as the meld count increases.
 format:
   html:
     embed-resources: true
@@ -254,6 +257,46 @@ for every other core. The same count proves the numerator identity in
 @thm-leading. In particular $1-t$ does not divide $P_n(t)$, so the
 common denominator $(1-t)^{3n}$ cannot be reduced by cancellation.
 
+## Density among uncapped hands {#sec-density}
+
+Let $A_n(m)$ be the number of all nonnegative multiplicity vectors on the
+same $3n$ labelled ranks with total size $3m+1$. Stars and bars gives
+
+$$
+A_n(m)=\binom{3m+3n}{3n-1}.
+$$ {#eq-ambient}
+
+For $n\ge1$ this count is positive at every $m$, and full waits form a
+subset of these hands. Thus $F_n(m)/A_n(m)$ is the probability of a full
+wait when each multiplicity vector of that size is equally likely.
+
+::: {#thm-density}
+## Full waits have density one
+
+For every fixed $n\ge1$,
+
+$$
+\lim_{m\to\infty}\frac{F_n(m)}{A_n(m)}=1.
+$$
+:::
+
+The right side of @eq-ambient is a polynomial in $m$ of degree $3n-1$,
+with leading coefficient $3^{3n-1}/(3n-1)!$. By @thm-leading, the full-wait
+count agrees eventually with a polynomial having exactly the same degree
+and leading coefficient. Their quotient therefore tends to one.
+
+The sampling in @thm-density assigns equal probability to multiplicity
+vectors. This specifies a multiset model with no physical copy cap.
+For three ranks, the ratio for $m\ge1$ is explicitly
+
+$$
+\frac{F_1(m)}{A_1(m)}=
+\frac{(3m-2)(3m-3)}{(3m+3)(3m+2)}.
+$$
+
+For example it is $1/6$ at $m=2$ and $63/88$ at $m=10$, so the limiting
+statement can coexist with a substantial deficit at small meld counts.
+
 ## Checked Lean sources {#sec-lean}
 
 [TripletCore.lean](TripletCore.lean) proves truncation, reconstruction,
@@ -270,10 +313,15 @@ Hilbert-polynomial API.
 residue-vector equivalence, the fully active core count, the exact degree
 and leading coefficient, and the numerator value in @thm-leading.
 
+[FullWaitDensity.lean](FullWaitDensity.lean) proves the finite ambient
+count in @eq-ambient, positivity and containment, the ambient counting
+polynomial, and the real limit in @thm-density. The last step uses
+Mathlib's limit theorem for quotients of polynomials of equal degree.
+
 These files use Lean 4.35.0 against the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
-The common [checker](check-lean.py) compiles twelve modules in a fresh
-temporary directory with strict linters and audits sixty-four declarations
+The common [checker](check-lean.py) compiles thirteen modules in a fresh
+temporary directory with strict linters and audits seventy-three declarations
 against only `propext`, `Classical.choice`, and `Quot.sound`:
 
 ```sh

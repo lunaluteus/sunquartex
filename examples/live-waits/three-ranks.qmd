@@ -19,6 +19,7 @@ resources:
   - TripletCore.lean
   - TripletCounting.lean
   - TripletLeading.lean
+  - FullWaitDensity.lean
   - check-lean.py
 abstract: |
   On three labelled ranks, live full-sided Mahjong waits at copy cap $q$
@@ -225,8 +226,8 @@ uv run python examples/live-waits/check-lean.py \
   --library /path/to/ninegates-lean4
 ```
 
-It compiles twelve source modules in a fresh temporary directory with strict
-linters, then audits sixty-four declarations. Only `propext`, `Classical.choice`,
+It compiles thirteen source modules in a fresh temporary directory with strict
+linters, then audits seventy-three declarations. Only `propext`, `Classical.choice`,
 and `Quot.sound` are permitted. Rendering the note does not perform this check.
 These independent experiments remain separate from the pending library PR.
 
