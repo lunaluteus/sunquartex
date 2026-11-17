@@ -27,7 +27,7 @@ abstract: |
   core and freely added triplets at designated coordinates. At each fixed
   order this gives an exact finite sum for every meld-count coefficient,
   a rational ordinary generating series, and a rational-coefficient counting
-  polynomial valid for every meld count at least $8n$. Its degree is exactly
+  polynomial valid for every meld count at least $5n$. Its degree is exactly
   $3n-1$, with leading coefficient $3^{3n-1}/(3n-1)!$. The structural
   decomposition, counting identities, and leading term are checked in Lean.
   The resulting density of full waits among uniformly sampled uncapped
@@ -193,7 +193,7 @@ There is an explicit polynomial $H_n(x)\in\mathbb Q[x]$ of degree at most
 $3n-1$ such that
 
 $$
-F_n(m)=H_n(m)\qquad(m\ge8n).
+F_n(m)=H_n(m)\qquad(m\ge5n).
 $$
 :::
 
@@ -204,11 +204,28 @@ H_n(x)=\sum_{\substack{a\in\mathcal K_n\\r(a)>0}}
 \binom{x-\kappa(a)+r(a)-1}{r(a)-1}.
 $$
 
-For $m\ge8n$, every core has $\kappa(a)<m$. The zero-active-rank cells
-contribute nothing, and each remaining term in @thm-count is the displayed
-binomial polynomial evaluated at $m$. Its degree is $r(a)-1\le3n-1$,
-proving @thm-polynomial. The bound $8n$ is a uniform sufficient starting
-point; smaller starting points can result after cancellations.
+Each inactive core coordinate is at most five and each active coordinate
+is at most eight. Since $|a|=3\kappa(a)+1$, this yields
+
+$$
+\begin{aligned}
+|a|&\le15n+3r(a),\\
+\kappa(a)+1&\le5n+r(a).
+\end{aligned}
+$$ {#eq-active-grade}
+
+For $r(a)>0$, the binomial polynomial agrees with the cell count at every
+integer $m\ge\kappa(a)-r(a)+1$. At $m\ge\kappa(a)$ this is the usual
+weak-composition formula. At the preceding $r(a)-1$ integers it vanishes,
+matching the absent core. For $r(a)=0$, the cell contributes nothing once
+$m\ge5n$, because @eq-active-grade gives $\kappa(a)\le5n-1$.
+Thus $m\ge5n$ suffices for every cell. Each nonzero row polynomial has
+degree $r(a)-1\le3n-1$, proving @thm-polynomial. This cutoff is sufficient;
+smaller starting points can result after cancellations.
+
+The same weighted bound also controls the numerator in @eq-numerator.
+Each summand has degree at most $\kappa(a)+3n-r(a)\le8n-1$, so
+$\deg P_n\le8n-1$.
 
 For three ranks, the [earlier exact formula](three-ranks.html) simplifies to
 
@@ -305,7 +322,8 @@ and the equivalence with graded weak compositions.
 
 [TripletCounting.lean](TripletCounting.lean) proves @thm-count, the coefficient
 and denominator identities for the generating series, and the evaluation
-and degree bound of @thm-polynomial. Mathlib supplies the weak-composition
+and degree bound of @thm-polynomial, including @eq-active-grade and the
+numerator degree bound. Mathlib supplies the weak-composition
 count through symmetric powers and the binomial polynomials through its
 Hilbert-polynomial API.
 
@@ -321,7 +339,7 @@ Mathlib's limit theorem for quotients of polynomials of equal degree.
 These files use Lean 4.35.0 against the structural library at
 [this revision](https://github.com/lunaluteus/ninegates-lean4/tree/7b379afe7f54f34c59c8abdfc8e6fa5f0bee952a).
 The common [checker](check-lean.py) compiles thirteen modules in a fresh
-temporary directory with strict linters and audits seventy-three declarations
+temporary directory with strict linters and audits seventy-five declarations
 against only `propext`, `Classical.choice`, and `Quot.sound`:
 
 ```sh

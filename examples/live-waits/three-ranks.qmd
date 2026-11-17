@@ -227,7 +227,7 @@ uv run python examples/live-waits/check-lean.py \
 ```
 
 It compiles thirteen source modules in a fresh temporary directory with strict
-linters, then audits seventy-three declarations. Only `propext`, `Classical.choice`,
+linters, then audits seventy-five declarations. Only `propext`, `Classical.choice`,
 and `Quot.sound` are permitted. Rendering the note does not perform this check.
 These independent experiments remain separate from the pending library PR.
 

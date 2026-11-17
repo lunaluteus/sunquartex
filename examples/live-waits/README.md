@@ -11,8 +11,8 @@ stabilizes. The fourth note `copy-cap-stability.qmd` proves the sharp
 stabilization cap at every higher order using a uniform coordinate bound and
 an explicit extremal family. The fifth note `triplet-counting.qmd` gives a unique
 bounded-core decomposition, an exact finite counting formula, a rational
-generating series, and eventual polynomial counts with exact degree and leading
-coefficient. It also proves density one among uniformly sampled uncapped
+generating series, and polynomial counts valid from meld count $5n$ with exact
+degree and leading coefficient. It also proves density one among uniformly sampled uncapped
 multiplicity vectors of increasing size. All five sources render to HTML, PDF, and GitHub Markdown.
 The PDF overrides the shared theorem counter so its theorem numbers agree with
 the other two formats.
@@ -43,7 +43,7 @@ uv run python examples/live-waits/check-lean.py --library /path/to/ninegates-lea
 ```
 
 The checker builds all thirteen Lean modules in a temporary directory with strict
-linters, then audits seventy-three declarations against the three standard axioms.
+linters, then audits seventy-five declarations against the three standard axioms.
 Use `--lake /path/to/lake` if the pinned toolchain is not on `PATH`.
 In a standalone export, run `python check-lean.py --library /path/to/ninegates-lean4`
 from the exported folder instead.

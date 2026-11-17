@@ -41,6 +41,7 @@ AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in
                   'meldCount_split', 'core_tail_lift', 'coreEquiv',
                   'core_meldCount_bound', 'grade_eq', 'full_grade',
                   'parametersEquiv', 'fixedEquiv', 'row_card', 'full_card_formula',
+                  'core_grade_active_bound', 'numerator_degree',
                   'eventualPolynomial_eval', 'eventualPolynomial_degree',
                   'generatingSeries_coeff', 'generatingSeries_rational'))
 AUDITED += tuple(f'Mahjong.VirtualHand.TripletCore.{name}' for name in

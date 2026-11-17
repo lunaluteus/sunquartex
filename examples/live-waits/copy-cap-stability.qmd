@@ -207,7 +207,7 @@ uv run python examples/live-waits/check-lean.py \
 ```
 
 The [checker](check-lean.py) compiles thirteen source modules in a fresh temporary
-directory with strict linters, then audits seventy-three declarations. Only
+directory with strict linters, then audits seventy-five declarations. Only
 `propext`, `Classical.choice`, and `Quot.sound` are permitted. Rendering the
 document is separate from checking the proofs. These notes remain an
 independent experiment in this fork.

@@ -13,7 +13,7 @@ import Mathlib.RingTheory.Polynomial.HilbertPoly
 The core decomposition gives an exact finite sum of multichoose numbers, a
 rational generating series with denominator `(1-X)^(3*n)`, and an explicit
 rational-coefficient counting polynomial valid at every meld count at least
-`8*n`. Its degree is at most `3*n-1`; this cutoff is sufficient, not asserted
+`5*n`. Its degree is at most `3*n-1`; this cutoff is sufficient, not asserted
 optimal. Mathlib supplies stars and bars through `Sym.equivNatSumOfFintype`
 and the polynomial evaluation through `Polynomial.preHilbertPoly`.
 -/
@@ -64,6 +64,30 @@ theorem full_card_formula (n m : ℕ) :
   intro a _
   exact row_card a m
 
+/-- Weighting the active ranks sharpens the grade bound for each core cell. -/
+theorem core_grade_active_bound {n : ℕ} (a : Cores n) :
+    grade a.val + 1 ≤ 5 * n + Nat.card (Active a) := by
+  classical
+  have active_sum : (∑ i : Rank n, if 6 ≤ a.val i then (3 : ℤ) else 0) =
+      (Nat.card (Active a) : ℤ) * 3 := by
+    rw [← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul,
+      ← Fintype.card_subtype, ← Nat.card_eq_fintype_card]
+  have upper : size a.val ≤ ((3 * n : ℕ) : ℤ) * 5 + (Nat.card (Active a) : ℤ) * 3 := by
+    calc
+      _ ≤ ∑ i : Rank n, (5 + if 6 ≤ a.val i then (3 : ℤ) else 0) := by
+        change (∑ i, a.val i) ≤ _
+        apply Finset.sum_le_sum
+        intro i _
+        split_ifs with active
+        · have bound := a.property.1.2 i
+          omega
+        · omega
+      _ = _ := by
+        rw [Finset.sum_add_distrib, active_sum]
+        simp [Rank]
+  rw [(full_grade a.property.2).2.1] at upper
+  omega
+
 /-- Polynomial contribution of one core to the eventual count. -/
 noncomputable def rowPolynomial {n : ℕ} (a : Cores n) : Polynomial ℚ :=
   if Nat.card (Active a) = 0 then 0 else
@@ -73,31 +97,34 @@ noncomputable def rowPolynomial {n : ℕ} (a : Cores n) : Polynomial ℚ :=
 noncomputable def eventualPolynomial (n : ℕ) : Polynomial ℚ :=
   ∑ a : Cores n, rowPolynomial a
 
-private lemma rowPolynomial_eval {n : ℕ} (a : Cores n) (m : ℕ) (large : 8 * n ≤ m) :
+private lemma rowPolynomial_eval {n : ℕ} (a : Cores n) (m : ℕ)
+    (large : 5 * n ≤ m) :
     (rowPolynomial a).eval (m : ℚ) =
       ((if grade a.val ≤ m then
         Nat.multichoose (Nat.card (Active a)) (m - grade a.val) else 0 : ℕ) : ℚ) := by
-  have base_bound := core_meldCount_bound a.property.1 (full_grade a.property.2)
-  have permitted : grade a.val ≤ m := by omega
-  rw [ite_eq_left permitted]
+  have bound := core_grade_active_bound a
   unfold rowPolynomial
   by_cases empty : Nat.card (Active a) = 0
-  · obtain ⟨j, equal⟩ := Nat.exists_eq_succ_of_ne_zero
+  · have permitted : grade a.val ≤ m := by omega
+    rw [ite_eq_left permitted, ite_eq_left empty]
+    obtain ⟨j, equal⟩ := Nat.exists_eq_succ_of_ne_zero
       (show m - grade a.val ≠ 0 by omega)
-    rw [ite_eq_left empty, empty, equal]
+    rw [empty, equal]
     simp
   · rw [ite_eq_right empty,
-      Polynomial.preHilbertPoly_eq_choose_add_sub ℚ (Nat.card (Active a) - 1) (by omega),
-      Nat.multichoose_eq]
-    have shape : m + (Nat.card (Active a) - 1) - grade a.val =
-        Nat.card (Active a) + (m - grade a.val) - 1 := by omega
-    rw [shape]
-    exact_mod_cast (Nat.choose_symm_of_eq_add
-      (by omega : Nat.card (Active a) + (m - grade a.val) - 1 =
-        (Nat.card (Active a) - 1) + (m - grade a.val)))
+      Polynomial.preHilbertPoly_eq_choose_add_sub ℚ (Nat.card (Active a) - 1) (by omega)]
+    by_cases permitted : grade a.val ≤ m
+    · rw [ite_eq_left permitted, Nat.multichoose_eq]
+      have shape : m + (Nat.card (Active a) - 1) - grade a.val =
+          Nat.card (Active a) + (m - grade a.val) - 1 := by omega
+      rw [shape]
+      exact_mod_cast (Nat.choose_symm_of_eq_add
+        (by omega : Nat.card (Active a) + (m - grade a.val) - 1 =
+          (Nat.card (Active a) - 1) + (m - grade a.val)))
+    · rw [ite_eq_right permitted, Nat.choose_eq_zero_of_lt (by omega)]
 
-/-- At every order, the full-wait count is polynomial once the meld count reaches `8*n`. -/
-theorem eventualPolynomial_eval (n m : ℕ) (large : 8 * n ≤ m) :
+/-- At every order, the full-wait count is polynomial once the meld count reaches `5*n`. -/
+theorem eventualPolynomial_eval (n m : ℕ) (large : 5 * n ≤ m) :
     (eventualPolynomial n).eval (m : ℚ) =
       (Nat.card {c : VirtualHand n // IsFullWait m c} : ℚ) := by
   rw [eventualPolynomial, Polynomial.eval_finsetSum, full_card_formula]
@@ -151,6 +178,25 @@ theorem generatingSeries_coeff (n m : ℕ) :
 noncomputable def numerator (n : ℕ) : Polynomial ℚ :=
   ∑ a : Cores n, Polynomial.X ^ grade a.val *
     (1 - Polynomial.X) ^ (3 * n - Nat.card (Active a))
+
+/-- The active-rank correction also bounds the rational numerator's degree. -/
+theorem numerator_degree (n : ℕ) : (numerator n).natDegree ≤ 8 * n - 1 := by
+  apply Polynomial.natDegree_sum_le_of_forall_le
+  intro a _
+  have bound := core_grade_active_bound a
+  have ranks_bound := Nat.card_le_card_of_injective
+    (fun i : Active a ↦ i.val) Subtype.val_injective
+  have ranks : Nat.card (Rank n) = 3 * n := by simp [Rank]
+  rw [ranks] at ranks_bound
+  have linear : (1 - Polynomial.X : Polynomial ℚ).natDegree ≤ 1 := by
+    simpa using Polynomial.natDegree_sub_le (1 : Polynomial ℚ) Polynomial.X
+  have power := Polynomial.natDegree_pow_le_of_le (3 * n - Nat.card (Active a)) linear
+  simp only [mul_one] at power
+  have product := Polynomial.natDegree_mul_le
+    (p := (Polynomial.X ^ grade a.val : Polynomial ℚ))
+    (q := (1 - Polynomial.X) ^ (3 * n - Nat.card (Active a)))
+  rw [Polynomial.natDegree_X_pow] at product
+  omega
 
 /-- The exact generating series has common denominator `(1-X)^(3*n)`. -/
 theorem generatingSeries_rational (n : ℕ) :

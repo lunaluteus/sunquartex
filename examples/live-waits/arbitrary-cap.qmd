@@ -201,7 +201,7 @@ uv run python examples/live-waits/check-lean.py \
 ```
 
 The [checker](check-lean.py) compiles the thirteen companion modules with strict
-linters in a temporary directory, then checks that the seventy-three audited
+linters in a temporary directory, then checks that the seventy-five audited
 declarations use only `propext`, `Classical.choice`, and `Quot.sound`.
 Rendering the document displays the mathematics; this command separately
 checks the proofs. The construction uses no enumeration of candidate hands.
