@@ -1,0 +1,20 @@
+---
+title: Quarto figure aspect ratio
+format: html
+jupyter: python3
+---
+
+```{python}
+#| label: fig-light-on
+#| fig-cap: Two plots
+#| fig-subcap:
+#|   - Increasing
+#|   - Decreasing
+#| layout-ncol: 2
+import matplotlib.pyplot as plt
+
+for values in ([0, 1, 2], [2, 1, 0]):
+    fig, ax = plt.subplots(figsize=(6.4, 4.8))
+    ax.plot(values)
+    plt.show()
+```
